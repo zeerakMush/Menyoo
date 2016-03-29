@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#FF4081</color>
+    <color name="white">#FFFF</color>
+    <color name="blue_iphone">#0f93FA</color>
+    <color name="blue_start">#0f93b8</color>
+    <color name="blue_end">#0f93b8</color>
+    <color name="tab_selected">#f9cf45</color>
+    <color name="tab_default">#6a4096</color>
+    <color name="black">#000</color>
+    <color name="blue_backgroud">#67d6ff</color>
+    <color name="blue_main">#a5e7ff</color>
+    <color name="text_color">#212121</color>
+    <color name="secondary_text">#727272</color>
+    <color name="background_color">#383838</color>
+
+    <!--<color name="btn_color_default">#6D9EEB</color>-->
+    <color name="btn_color_default">#6D9EEB</color>
+    <color name="btn_color_Sec">#4166A4</color>
+    <color name="transparent">#00000000</color>
+    <color name="transparent_selector">#A1FFFFFF</color>
+    <color name="transparent_barele">#9E0A1424</color>
+    <color name="bottom_menu_color">#AAAAAA</color>
+    <color name="sub_text_color">#757575</color>
+    <color name="dialog_color">#666666</color>
+    <color name="dialog_text_colot">#7FCBC4</color>
+
+    <color name="green">#5ED058</color>
+    <color name="red">#D23742</color>
+
+</resources>

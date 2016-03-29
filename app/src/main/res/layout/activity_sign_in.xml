@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="27dp"
+    android:background="@drawable/bg_image_2"
+    tools:context="com.dd.menyoo.SignInActivity">
+    <EditText
+        android:id="@+id/et_emailAddress"
+        android:layout_width="match_parent"
+        android:inputType="textEmailAddress"
+        android:textColor="@color/white"
+        android:layout_marginTop="200dp"
+        android:textSize="18sp"
+        android:layout_height="wrap_content"
+        android:textColorHint="@color/white"
+        android:hint="Email Address"
+        android:layout_centerHorizontal="true"
+        />
+    <EditText
+        android:id="@+id/et_password"
+        android:layout_width="match_parent"
+        android:textColor="@color/white"
+        android:textSize="18sp"
+        android:textColorHint="@color/white"
+        android:layout_height="wrap_content"
+        android:hint="Enter Password"
+        android:singleLine="true"
+        android:imeOptions="actionDone"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/et_emailAddress"
+        />
+    <Button
+        android:id="@+id/btn_signIn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="17sp"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:layout_marginBottom="20dp"
+        android:layout_alignParentBottom="true"
+        android:onClick="signIn"
+        android:layout_centerHorizontal="true"
+        android:text="Sign In"
+        />
+    <Button
+        android:id="@+id/btn_Forget_Password"
+        android:layout_width="wrap_content"
+        android:text="@string/forget_password"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:textSize="15sp"
+        android:visibility="gone"
+        android:layout_below="@id/et_password"
+        android:background="@color/transparent"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_height="wrap_content" />
+
+    <Button
+        android:id="@+id/btn_guest_login"
+        android:layout_width="wrap_content"
+        android:text="@string/guest_login"
+        android:textSize="14.6sp"
+        android:visibility="visible"
+        android:textStyle="normal"
+        android:layout_below="@id/btn_Forget_Password"
+        android:background="@color/transparent"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:onClick="guestLogin"
+        android:layout_height="wrap_content" />
+</RelativeLayout>

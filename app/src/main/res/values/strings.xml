@@ -1,0 +1,44 @@
+<resources>
+    <string name="app_name">Menyoo</string>
+    <string name="moto">Revolutionising Dining Experience</string>
+    <string name="logo_name">M E N Y O O</string>
+    <string name="sign_in">Sign In</string>
+    <string name="register">Register</string>
+    <string name="login_fb">Login With Facebook</string>
+    <string name="title_activity_menu">MenuActivity</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Settings</string>
+
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="url">http://203.130.28.214:3376/Menyoo/Service/</string>
+    <string name="url_offline1">http://192.168.0.25/menyoo/Service/</string>
+
+   <!-- <string name="url_offline">http://203.130.28.214:3374/Menyoo/Service/</string>
+    <string name="url_offline_signalR">http://203.130.28.214:3374/Menyoo</string>-->
+
+    <!--<string name="url_offline">http://52.77.40.122/Service/</string>
+    <string name="url_offline_signalR">http://52.77.40.122</string>-->
+
+
+    <string name="url_offline">http://203.130.28.214:3374/MenyooDev/Service/</string>
+    <string name="url_offline_signalR">http://203.130.28.214:3374/MenyooDev</string>
+
+    <string name="facebook_app_id">191050881259860</string>
+    <string name="login">EmailLogin</string>
+
+    <string name="dummy_text">Lorem ipsum dolor sit amet, consectetur adipiscing elit,
+        sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+        Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
+        aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in
+        voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</string>
+    <string name="pass_Reg">Phone Number* (min 6 characters)</string>
+    <string name="guest_disable">Guest Login cannot access this feature. Please login to enjoy all features!</string>
+    <string name="restaurant_disbled_message">Restaurant is not active ,please wait</string>
+    <string name="app_disable_message">We are currently in maintenance, sorry for the inconvenience caused</string>
+    <string name="view_more"><u>view more</u></string>
+    <string name="guest_login"><u>Let me explore first</u></string>
+    <string name="forget_password"><u>Forget Password</u></string>
+</resources>

@@ -1,0 +1,169 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.dd.menyoo.fragment.Basket">
+
+    <LinearLayout
+        android:id="@+id/ll_header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="0dp"
+        android:orientation="vertical"
+        android:visibility="visible">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/tv_topHeader"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:text="Your Current Order"
+                android:textColor="@color/secondary_text"
+                android:textSize="18sp"/>
+
+            <Button
+                android:id="@+id/btn_edit"
+                android:layout_width="50dp"
+                android:layout_height="30dp"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:background="@drawable/edit" />
+        </RelativeLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="2dp"
+            android:background="@color/white" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_bottom"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="60dp"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:paddingLeft="40dp"
+        android:paddingRight="40dp"
+        android:weightSum="2">
+
+        <Button
+            android:id="@+id/btn_check_bill"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:enabled="false"
+            android:background="@drawable/button_left"
+            android:text="Check Bill"
+            android:textSize="17sp" />
+
+        <Button
+            android:id="@+id/btn_submit"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/button_right"
+            android:singleLine="true"
+            android:text="Submit Order"
+            android:textSize="17sp" />
+    </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/rl_top"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/ll_bottom"
+        android:layout_below="@id/ll_header"
+        android:layout_marginBottom="20dp"
+        android:orientation="vertical"
+        android:weightSum="1">
+
+        <View
+            android:id="@+id/dvider2"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_alignParentBottom="true"
+            android:layout_marginTop="2dp"
+            android:background="@color/white" />
+        <RelativeLayout
+            android:id="@+id/rl_sum"
+            android:layout_width="match_parent"
+            android:layout_above="@id/dvider2"
+            android:layout_height="wrap_content"
+            android:padding="7dp">
+
+            <TextView
+                android:id="@+id/tv_total_quantity"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="30dp"
+                android:text="T.QTY: N/A"
+                android:textColor="@color/btn_color_default"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tv_total_cost"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="30dp"
+                android:text="T.Cost: N/A"
+                android:textColor="@color/btn_color_default"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+        </RelativeLayout>
+        <View
+            android:id="@+id/dvider"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="2dp"
+            android:layout_above="@id/rl_sum"
+            android:background="@color/white" />
+
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rv_order"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_above="@id/dvider"
+            android:foregroundGravity="center"
+            android:padding="5dp"
+            android:visibility="visible">
+
+        </android.support.v7.widget.RecyclerView>
+        <Button
+            android:id="@+id/btn_gto_menu"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:padding="10dp"
+            android:background="@drawable/btn_defult"
+            android:visibility="gone"
+            android:text="Go to Menu"
+            />
+        <TextView
+            android:id="@+id/tv_noorder"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@id/btn_gto_menu"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="10dp"
+            android:visibility="gone"
+            android:text="No Order Added"
+            />
+
+    </RelativeLayout>
+
+
+</RelativeLayout>

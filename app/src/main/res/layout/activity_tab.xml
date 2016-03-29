@@ -1,0 +1,397 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.dd.menyoo.TabActivity">
+
+    <RelativeLayout
+        android:id="@+id/ll_top"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:background="@color/black"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <ImageButton
+            android:id="@+id/btn_back"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:scaleType="centerCrop"
+            android:onClick="backButton"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:src="@drawable/icon_back"
+            android:padding="13dp"
+            android:background="@color/black"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_centerInParent="true"
+            android:gravity="center"
+            android:text="MENYOO"
+            android:textColor="@color/btn_color_default"
+            android:textSize="27sp"
+            android:textStyle="bold" />
+
+        <ImageButton
+            android:id="@+id/btn_home"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:onClick="toRestaurants"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="10dp"
+            android:src="@drawable/home_btn_active_2x"
+            android:padding="12dp"
+            android:background="@color/black"
+            android:scaleType="centerCrop" />
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/rl_tableRes"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/ll_top"
+        android:orientation="vertical"
+        >
+
+        <RelativeLayout
+            android:id="@+id/rl_banner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:background="@drawable/border_banner"
+
+            >
+
+            <ImageButton
+                android:id="@+id/btn_collapse_banner"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:onClick="collapseBanner"
+                android:padding="4dp"
+                android:layout_alignParentRight="true"
+                android:scaleType="fitXY"
+                android:layout_alignParentEnd="true"
+                android:background="@color/transparent"
+                android:src="@drawable/cancel_note"
+                />
+            <TextView
+                android:id="@+id/tv_bannerText"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginLeft="20dp"
+                android:text="BannerText Here"
+                android:gravity="center"
+                />
+
+        </RelativeLayout>
+
+
+        <RelativeLayout
+
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:background="@color/black"
+            android:padding="7dp">
+
+
+            <RelativeLayout
+                android:id="@+id/rl_table_code"
+                android:layout_width="122dp"
+                android:visibility="visible"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true">
+
+                <EditText
+                    android:id="@+id/et_tableCode"
+                    android:textSize="14sp"
+                    android:layout_width="122dp"
+                    android:layout_height="wrap_content"
+                    android:visibility="visible"
+                    android:padding="5dp"
+                    android:textColor="@color/bottom_menu_color"
+                    android:background="@drawable/custom_edit_text"
+                    android:drawableLeft="@drawable/table_icon"
+                    android:hint="Table Code"
+                    android:imeOptions="actionDone"
+                    android:inputType="text" />
+
+                <ProgressBar
+                    android:id="@+id/pb_tablecode"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:visibility="gone"
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginRight="5dp"
+                    style="@style/Base.Widget.AppCompat.ProgressBar"
+                    />
+                <Button
+                    android:id="@+id/btn_qr"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:onClick="ToQrScanner"
+                    android:layout_centerVertical="true"
+                    android:visibility="gone"
+                    android:background="@drawable/qr_code_scan"
+                    android:layout_alignParentRight="true"
+                    />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/rl_table_request_wait"
+                android:layout_width="122dp"
+                android:visibility="gone"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true">
+                <ProgressBar
+                    android:id="@+id/pb_tablerequestWait"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:visibility="visible"
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginRight="5dp"
+                    style="@style/Base.Widget.AppCompat.ProgressBar"
+                    />
+                <Button
+                    android:id="@+id/btn_table_request_wait"
+                    android:layout_width="30dp"
+                    android:onClick="cancelGuestRequest"
+                    android:layout_height="30dp"
+                    android:layout_toLeftOf="@id/pb_tablerequestWait"
+                    android:background="@drawable/cancel_request"
+                    />
+            </RelativeLayout>
+
+            <TextView
+                android:id="@+id/res_name"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:layout_toLeftOf="@id/rl_table_code"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentLeft="true"
+                android:text="Restraunemtn Name"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tv_tableCode"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:textColor="@color/btn_color_default"
+                android:text="Table"
+                android:textSize="17sp"
+                android:visibility="gone"
+                android:textStyle="bold"
+                android:layout_marginRight="10dp"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                />
+
+        </RelativeLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_bottom_menu"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_alignParentBottom="true"
+        android:background="@color/bottom_menu_color"
+        android:gravity="center_vertical"
+        android:baselineAligned="false">
+
+        <LinearLayout
+            android:id="@+id/ll_special"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:onClick="toSpecials"
+            android:orientation="vertical"
+            android:background="@color/btn_color_default"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp">
+
+            <ImageView
+                android:layout_width="28dp"
+                android:layout_height="0dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="3dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_weight="1"
+                android:src="@drawable/icon_specials" />
+
+            <TextView
+                android:id="@+id/btn_btn1"
+                android:layout_gravity="center_horizontal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="13sp"
+                android:singleLine="true"
+                android:text="Specials" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_menu"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:onClick="toMenu"
+            android:orientation="vertical"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp">
+
+            <ImageView
+                android:layout_width="28dp"
+                android:layout_marginTop="5dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_weight="1"
+                android:layout_marginBottom="3dp"
+                android:src="@drawable/icon_menu" />
+
+            <TextView
+                android:id="@+id/btn_btn2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:textSize="13sp"
+                android:singleLine="true"
+                android:text="Menu" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_basket"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:onClick="toBasket"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp">
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                >
+
+
+                <ImageView
+                    android:layout_width="28dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginBottom="3dp"
+                    android:layout_centerHorizontal="true"
+                    android:src="@drawable/icon_basket" />
+                <TextView
+                    android:id="@+id/basket_count"
+                    android:layout_width="15dp"
+                    android:layout_height="15dp"
+                    android:gravity="center"
+                    android:textSize="9sp"
+                    android:textStyle="bold"
+                    android:visibility="gone"
+                    android:text="1"
+                    android:layout_alignParentRight="true"
+                    android:background="@drawable/notification_icon_2x"
+                    />
+            </RelativeLayout>
+
+            <TextView
+                android:id="@+id/btn_btn4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:textSize="13sp"
+                android:singleLine="true"
+                android:text="Basket" />
+
+        </LinearLayout>
+        <LinearLayout
+            android:visibility="gone"
+            android:id="@+id/ll_checkbill"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:onClick="toBill"
+            android:orientation="vertical"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp">
+
+            <ImageView
+                android:layout_width="28dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="3dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_weight="1"
+                android:src="@drawable/icon_checkbill" />
+
+            <TextView
+                android:id="@+id/btn_btn5"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:textSize="13sp"
+                android:singleLine="true"
+                android:text="Bill" />
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/ll_action"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:onClick="toAction"
+            android:orientation="vertical"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp">
+
+            <ImageView
+                android:layout_width="28dp"
+                android:layout_height="0dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="3sp"
+                android:layout_gravity="center_horizontal"
+                android:layout_weight="1"
+                android:src="@drawable/icon_action" />
+
+            <TextView
+                android:id="@+id/btn_btn3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:textSize="13sp"
+                android:singleLine="true"
+                android:text="Action" />
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+    <FrameLayout
+        android:id="@+id/fragmentWindow"
+        android:name="com.dd.menyoo.fragment.SpecialMenu"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/ll_bottom_menu"
+        android:layout_below="@id/rl_tableRes"
+        android:visibility="visible"
+        tools:layout="@layout/fragment_special_menu" />
+
+</RelativeLayout>

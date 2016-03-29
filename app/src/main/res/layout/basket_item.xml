@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:layout_height="wrap_content">
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <Button
+            android:id="@+id/btn_delete"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="2dp"
+            android:layout_marginTop="2dp"
+            android:background="@drawable/cancel_note"
+            android:visibility="gone" />
+
+        <RelativeLayout
+            android:id="@+id/rl_upper"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toLeftOf="@id/btn_delete"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:paddingTop="4dp">
+
+            <TextView
+                android:id="@+id/tv_order_prize"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:text="RM 12.00"
+                android:textColor="@color/sub_text_color"
+                android:textSize="17sp" />
+            <TextView
+                android:id="@+id/tv_order_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_toLeftOf="@id/tv_order_prize"
+                android:text="x1 some orderadjahfjahfhsdjfshdgfhsdgfhsdgfysgd"
+                android:textSize="17sp" />
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_below="@id/tv_order_name"
+                android:layout_marginRight="10dp"
+                android:layout_toLeftOf="@id/tv_order_prize"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/tv_order_comment"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Comment"
+                    android:textColor="@color/sub_text_color"
+                    android:textSize="13sp"
+                    android:visibility="gone" />
+
+                <TextView
+                    android:id="@+id/tv_order_state"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Comment"
+                    android:textColor="@color/sub_text_color"
+                    android:textSize="12.7sp"
+                    android:visibility="gone" />
+
+            </LinearLayout>
+
+
+        </RelativeLayout>
+    </RelativeLayout>
+
+
+    <LinearLayout
+        android:id="@+id/ll_changeQuantity"
+        android:layout_width="match_parent"
+        android:background="@drawable/border"
+        android:visibility="gone"
+        android:layout_marginTop="10dp"
+        android:layout_height="40dp">
+        <Button
+            android:id="@+id/btn_sub"
+            android:layout_width="40dp"
+            android:text="-"
+            android:textSize="20sp"
+            android:background="@color/bottom_menu_color"
+            android:layout_height="match_parent" />
+        <TextView
+            android:id="@+id/tv_quantity"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:text="Qunatity 1"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:textSize="16sp"
+            android:layout_height="match_parent" />
+        <Button
+            android:id="@+id/btn_add"
+            android:layout_width="40dp"
+            android:layout_height="match_parent"
+            android:background="@color/bottom_menu_color"
+            android:textSize="20sp"
+            android:text="+"
+            />
+    </LinearLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@id/rl_upper"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="4dp"
+        android:background="@color/white" />
+
+</LinearLayout>

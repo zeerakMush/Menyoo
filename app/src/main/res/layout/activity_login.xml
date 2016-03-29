@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="27dp"
+    android:background="@drawable/bg_image_2"
+    tools:context="com.dd.menyoo.LoginActivity">
+
+    <ImageView
+        android:id="@+id/icon"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:src="@drawable/logo_main"
+        android:gravity="center"
+        android:textStyle="bold"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="150dp"
+        android:textColor="@color/btn_color_default"
+        android:textSize="50sp"
+        />
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textScaleX="1"
+        android:gravity="center"
+        android:textSize="20.4sp"
+        android:text="@string/moto"
+        android:layout_below="@id/icon"/>
+    <RelativeLayout
+        android:id="@+id/rl_fb"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="20dp"
+        android:layout_centerInParent="true">
+
+
+        <com.facebook.login.widget.LoginButton
+            android:id="@+id/btn_fb"
+            android:visibility="visible"
+            android:layout_width="match_parent"
+            android:text="@string/login_fb"
+            android:drawableLeft="@null"
+            android:background="@drawable/button"
+            android:textSize="17sp"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:layout_height="wrap_content"
+            />
+        <ImageView
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="8dp"
+            android:layout_marginLeft="8dp"
+            android:src="@drawable/fb_logo"
+
+            />
+    </RelativeLayout>
+
+
+    <Button
+        android:id="@+id/btn_fb1"
+        android:layout_width="match_parent"
+        android:text="@string/login_fb"
+        android:background="@drawable/button"
+        android:layout_alignParentBottom="true"
+        android:textSize="17sp"
+        android:textStyle="normal"
+        android:visibility="gone"
+        android:layout_marginBottom="20dp"
+        android:layout_height="wrap_content" />
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:orientation="horizontal"
+        android:layout_above="@id/rl_fb"
+        android:layout_marginBottom="10dp"
+        android:layout_height="wrap_content">
+
+        <Button
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:text="@string/sign_in"
+            android:textSize="17sp"
+            android:onClick="toMenuActivity"
+            android:background="@drawable/button_left"
+            android:layout_height="wrap_content" />
+
+        <View
+            android:layout_width="1dp"
+            android:layout_marginTop="1dp"
+            android:layout_marginBottom="1dp"
+
+            android:layout_height="match_parent"
+            android:background="@color/white"
+            />
+
+        <Button
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:text="@string/register"
+            android:onClick="toRegister"
+            android:textSize="17sp"
+            android:background="@drawable/button_right"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
+</RelativeLayout>
