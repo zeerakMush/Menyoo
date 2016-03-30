@@ -22,6 +22,9 @@
     <!--<string name="url_offline">http://52.77.40.122/Service/</string>
     <string name="url_offline_signalR">http://52.77.40.122</string>-->
 
+  <!--  <string name="url_offline">http://52.77.40.122/Menyoo/Service/</string>
+    <string name="url_offline_signalR">http://52.77.40.122/Menyoo</string>-->
+
 
     <string name="url_offline">http://203.130.28.214:3374/MenyooDev/Service/</string>
     <string name="url_offline_signalR">http://203.130.28.214:3374/MenyooDev</string>
@@ -33,10 +36,11 @@
         sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
         Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
         aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in
-        voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</string>
+        voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+        Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</string>
     <string name="pass_Reg">Phone Number* (min 6 characters)</string>
     <string name="guest_disable">Guest Login cannot access this feature. Please login to enjoy all features!</string>
-    <string name="restaurant_disbled_message">Restaurant is not active ,please wait</string>
+    <string name="restaurant_disbled_message">Sorry, this restaurant is not active.</string>
     <string name="app_disable_message">We are currently in maintenance, sorry for the inconvenience caused</string>
     <string name="view_more"><u>view more</u></string>
     <string name="guest_login"><u>Let me explore first</u></string>

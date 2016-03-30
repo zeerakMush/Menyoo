@@ -81,12 +81,12 @@ public abstract class BaseClass extends AppCompatActivity{
     }
 
     public void showDialogFromNotUi(final String message){
-        /*runOnUiThread(new Runnable(){
+        runOnUiThread(new Runnable(){
             @Override
             public void run(){
                 showDisableDialog(BaseClass.this,message);
             }
-        });*/
+        });
 
     }
 

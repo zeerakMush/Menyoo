@@ -106,7 +106,10 @@ public class MenuTab2 extends BaseFragment {
                 String name = jObj.getString("Name");
                 String description = jObj.getString("Description");
                 double prize = jObj.getDouble("Price");
-                mMenuItemArray.add(new MenuModel(name,description,prize,id));
+                boolean isExtraData=false;
+                if(description.length()>140)
+                    isExtraData = true;
+                mMenuItemArray.add(new MenuModel(name,description,prize,id,isExtraData));
             }
             mtAdapter.setData(mMenuItemArray);
             mtAdapter.notifyDataSetChanged();

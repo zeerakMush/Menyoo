@@ -117,11 +117,12 @@ public class MenuModel extends BaseClassModel {
         this.isPopular = isPopular;*/
     }
 
-    public MenuModel(String title, String description, double price, int itemID) {
+    public MenuModel(String title, String description, double price, int itemID,boolean isExtraData) {
         this.title = title;
         this.description = description;
         this.price = price;
         this.itemID = itemID;
+        this.isExtraData=isExtraData;
     }
 
     public static enum type{

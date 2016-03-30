@@ -23,6 +23,18 @@
             android:textSize="18sp"
             android:text="Full Menu" />
 
+        <TextView
+            android:id="@+id/tv_extra_description_category"
+            android:layout_width="wrap_content"
+            android:textColor="@color/secondary_text"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textSize="14sp"
+            android:visibility="gone"
+            android:padding="10dp"
+            android:text="@string/dummy_text"
+            />
+
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"

@@ -56,7 +56,7 @@ public class MenuTabAdapter2 extends RecyclerView.Adapter<RecyclerView.ViewHolde
     public void onBindViewHolder(RecyclerView.ViewHolder rawHolder, final int position) {
         final ItemViewHolder holder = (ItemViewHolder) rawHolder;
         final MenuModel menuItem = mDataList.get(position);
-
+        holder.postiionNumber = position;
         holder.tvTitle.setText(menuItem.getTitle());
         holder.tvDescrition.setText(menuItem.getDescription());
         holder.tvPrice.setText(String.format("RM %.2f",menuItem.getPrice()));
@@ -89,21 +89,51 @@ public class MenuTabAdapter2 extends RecyclerView.Adapter<RecyclerView.ViewHolde
             }
         });
         holder.tvViewMore.setVisibility(View.GONE);
-        holder.tvDescrition.setMaxLines(5);
+        holder.tvDescrition.setMaxLines(3);
+        /*Layout layout = holder.tvDescrition.getLayout();
+        if (layout != null) {
+            // The TextView has already been laid out
+            // We can check whether it's ellipsized immediately
+            if (layout.getEllipsisCount(layout.getLineCount()-1) > 0) {
+                // Text is ellipsized in re-used view, show 'Expand' button
+                holder.tvViewMore.setVisibility(View.VISIBLE);
+            }
+        } else {
+            // The TextView hasn't been laid out, so we need to set an observer
+            // The observer fires once layout's done, when we can check the ellipsizing
+            ViewTreeObserver vto = holder.tvDescrition.getViewTreeObserver();
+            vto.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+                @Override
+                public void onGlobalLayout() {
+                    Layout layout = holder.tvDescrition.getLayout();
+                    if (layout.getEllipsisCount(layout.getLineCount() - 1) > 0) {
+                        // Text is ellipsized in newly created view, show 'Expand' button
+                        holder.tvViewMore.setVisibility(View.VISIBLE);
+                    }
 
-        ViewTreeObserver vto = holder.tvDescrition.getViewTreeObserver();
+                    // Remove the now unnecessary observer
+                    // It wouldn't fire again for reused views anyways
+                    ViewTreeObserver obs = holder.tvDescrition.getViewTreeObserver();
+                    obs.removeGlobalOnLayoutListener(this);
+                }
+            });
+        }*/
+
+
+            ViewTreeObserver vto = holder.tvDescrition.getViewTreeObserver();
         vto.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
             public void onGlobalLayout() {
                 if(isTextViewEllipsized(holder.tvDescrition)){
                     holder.tvViewMore.setVisibility(View.VISIBLE);
-                    mDataList.get(position).setExtraData(true);
+                    mDataList.get(holder.postiionNumber).setExtraData(true);
                 }
             }
         });
         if(mDataList.get(position).isExtraData()){
             holder.tvViewMore.setVisibility(View.VISIBLE);
-        }
+        }else
+            holder.tvViewMore.setVisibility(View.GONE);
         holder.tvViewMore.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -111,6 +141,10 @@ public class MenuTabAdapter2 extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 holder.tvDescrition.setMaxLines(Integer.MAX_VALUE);
             }
         });
+        if (isTextViewEllipsized(holder.tvDescrition)) {
+            holder.tvViewMore.setVisibility(View.VISIBLE);
+            mDataList.get(position).setExtraData(true);
+        }
 
     }
 
@@ -152,6 +186,7 @@ public class MenuTabAdapter2 extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
         private TextView tvTitle,tvDescrition,tvPrice,tvViewMore;
         private Button btnAdd;
+        private int postiionNumber;
 
         public ItemViewHolder(View itemView) {
             super(itemView);
