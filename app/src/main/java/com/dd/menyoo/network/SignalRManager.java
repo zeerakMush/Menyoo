@@ -34,7 +34,7 @@ public class SignalRManager {
     private static SignalRManager mSignalR = null;
     private static TimerTask backgroundCheck;
     public static boolean shouldAutoConnect = true;
-    volatile boolean  isConnected;
+    volatile boolean isConnected;
 
     private SignalRManager() {
     }
@@ -50,7 +50,7 @@ public class SignalRManager {
 
 
     public void cancelDisconnection() {
-        if(backgroundCheck != null) {
+        if (backgroundCheck != null) {
             backgroundCheck.cancel();
             backgroundCheck = null;
         }
@@ -58,7 +58,8 @@ public class SignalRManager {
 
     public void forceDisconnect() {
         getInstance().shouldAutoConnect = false;
-        Disconnect();;
+        Disconnect();
+        ;
     }
 
     public void disconnectAfterFew() {
@@ -68,7 +69,8 @@ public class SignalRManager {
             public void run() {
 
                 getInstance().shouldAutoConnect = false;
-                Disconnect();;
+                Disconnect();
+                ;
                 backgroundCheck.cancel();
             }
         };
@@ -105,12 +107,12 @@ public class SignalRManager {
 
     public boolean isConnected() {
 
-        if (mConnection == null){
-            isConnected=false;
+        if (mConnection == null) {
+            isConnected = false;
             return isConnected;
 
         }
-        isConnected= mConnection.getState() == ConnectionState.Connected;
+        isConnected = mConnection.getState() == ConnectionState.Connected;
         return isConnected;
     }
 
@@ -125,8 +127,7 @@ public class SignalRManager {
         try {
             if (mConnection != null)
                 mConnection.stop();
-        }
-        catch(Exception ex) {
+        } catch (Exception ex) {
             ex.printStackTrace();
         }
     }
@@ -143,7 +144,7 @@ public class SignalRManager {
     public synchronized void Connect(final ICallBack callBack) {
         try {
             // Just to make sure existing connection should be closed before opening a new one
-            if(this.isConnected() || this.isConnecting()) {
+            if (this.isConnected() || this.isConnecting()) {
                 return;
             }
             Platform.loadPlatformComponent(new AndroidPlatformComponent());
@@ -164,7 +165,7 @@ public class SignalRManager {
                             Log.e("SignalR Status", "Disconnected");
                             mConnection = null;
                             mHub = null;
-                            if(shouldAutoConnect) {
+                            if (shouldAutoConnect) {
                                 ReConnect(null);
                             }
                             break;
@@ -183,9 +184,9 @@ public class SignalRManager {
             awaitConnection.onError(new ErrorCallback() {
                 @Override
                 public void onError(Throwable error) {
-                Log.e("Error",error.toString());
+                    Log.e("Error", error.toString());
                     forceDisconnect();
-                    if(AppController.isActivityVisible()){
+                    if (AppController.isActivityVisible()) {
                         ((BaseClass) AppController.getCurrentActivity()).showDialogFromNotUi(error.toString());
                     }
                 }
@@ -197,27 +198,25 @@ public class SignalRManager {
     }
 
     public void ReConnect(final ICallBack callback) {
-            if(this.isConnected() || this.isConnecting()) {
-                return;
+        if (this.isConnected() || this.isConnecting()) {
+            return;
+        }
+        Thread newThread;
+        newThread = new Thread() {
+            @Override
+            public void run() {
+                Connect(callback);
             }
-            Thread newThread = new Thread(){
-                @Override
-                public void run() {
-                    Connect(callback);
-                }
-            };
-            Disconnect();
-            mConnection = null;
-            mHub = null;
-            if(newThread.isAlive()){
-                newThread.interrupt();
-                Log.e("Menyoo","ConThread destroy");
-            }
-
-            newThread.start();
-            Log.e("Menyoo","ConThread running");
+        };
+        // Disconnect();
+        mConnection = null;
+        mHub = null;
+        if (newThread.isAlive()) {
+            newThread.interrupt();
+            Log.e("Menyoo", "ConThread destroy");
         }
 
-
-
+        newThread.start();
+        Log.e("Menyoo", "ConThread running");
+    }
 }

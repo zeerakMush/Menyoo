@@ -16,13 +16,13 @@
     <string name="url">http://203.130.28.214:3376/Menyoo/Service/</string>
     <string name="url_offline1">http://192.168.0.25/menyoo/Service/</string>
 
-   <!-- <string name="url_offline">http://203.130.28.214:3374/Menyoo/Service/</string>
+    <!-- <string name="url_offline">http://203.130.28.214:3374/Menyoo/Service/</string>
     <string name="url_offline_signalR">http://203.130.28.214:3374/Menyoo</string>-->
 
     <!--<string name="url_offline">http://52.77.40.122/Service/</string>
     <string name="url_offline_signalR">http://52.77.40.122</string>-->
 
-  <!--  <string name="url_offline">http://52.77.40.122/Menyoo/Service/</string>
+    <!--  <string name="url_offline">http://52.77.40.122/Menyoo/Service/</string>
     <string name="url_offline_signalR">http://52.77.40.122/Menyoo</string>-->
 
 
@@ -45,4 +45,5 @@
     <string name="view_more"><u>view more</u></string>
     <string name="guest_login"><u>Let me explore first</u></string>
     <string name="forget_password"><u>Forget Password</u></string>
+    <string name="upgrade_text">Your version of Menyoo is outdated. Please download the latest version from Google Play now!</string>
 </resources>

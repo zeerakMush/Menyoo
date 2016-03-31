@@ -139,8 +139,9 @@ public class MenuTab1 extends BaseFragment {
                 String name = jObj.getString("Name");
                 String imageNAme = jObj.getString("DisplayPicture");
                 String parentID = jObj.getString("ParentId");
+                String categoryMessage = jObj.getString("CategoryMessage");
                 if (parentID != null && !parentID.equals("null")) {
-                    mCategoryArr.add(new CategoryModel(id, name, imageNAme, parentID));
+                    mCategoryArr.add(new CategoryModel(id, name, imageNAme, parentID,categoryMessage));
                 } else {
                     SectionModel sectionModel = new SectionModel();
                     sectionModel.setCategoryID(id);

@@ -31,7 +31,7 @@ import java.util.List;
 public class MenuTab2 extends BaseFragment {
 
     RecyclerView rvMenuTab2;
-    TextView tvTopHeader;
+    TextView tvTopHeader,tvCategoryMessage;
     ProgressBar pbMenu;
     ArrayList<MenuModel> mMenuItemArray;
     MenuTabAdapter2 mtAdapter;
@@ -55,8 +55,14 @@ public class MenuTab2 extends BaseFragment {
         super.onViewCreated(view, savedInstanceState);
         rvMenuTab2 = (RecyclerView)view.findViewById(R.id.rv_menuTab2);
         tvTopHeader = (TextView)view.findViewById(R.id.tv_topHeader);
+        tvCategoryMessage = (TextView)view.findViewById(R.id.tv_extra_description_category);
         pbMenu = (ProgressBar)view.findViewById(R.id.pb_menu);
         tvTopHeader.setText(categoryModel.getName());
+        if(!categoryModel.getCategoryMessage().trim().isEmpty()&&!categoryModel.getCategoryMessage().equals("null")){
+            tvCategoryMessage.setVisibility(View.VISIBLE);
+            tvCategoryMessage.setText(categoryModel.getCategoryMessage());
+        }
+
         setMenuTab2Adapter();getCategoriesItems(categoryModel.getCategoryId());
     }
 

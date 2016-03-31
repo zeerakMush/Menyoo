@@ -88,11 +88,19 @@ public class Action extends BaseFragment implements View.OnClickListener {
         tvBillTimer = (TextView) view.findViewById(R.id.tv_bill_timer);
         tvAlreadyGetBill = (TextView) view.findViewById(R.id.alreadyGetBill);
 
+
+
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
         waiterQueueUpdated(((TabActivity)getActivity()).orderInQueueWaiter);
         billQueueUpdated(((TabActivity)getActivity()).orderInQueueBill);
 
         startTimeWaiter = ((TabActivity) getActivity()).timeWaiterStart;
         startTimeBill = ((TabActivity) getActivity()).timeBillStart;
+        timeSwapBuffWaiter=0L;timeSwapBuffBill=0L;
 
         if (startTimeWaiter > 0) {
             customHandlerWaiter.postDelayed(updateTimerThreadWaiter, 0);
@@ -107,7 +115,6 @@ public class Action extends BaseFragment implements View.OnClickListener {
             llGetBill.setVisibility(View.VISIBLE);
         }
         setBillButton();
-
     }
 
     public void setBillButton(){
@@ -450,4 +457,9 @@ public class Action extends BaseFragment implements View.OnClickListener {
         }
     }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+        pauseBillClock();pausewaiterCloack();
+    }
 }

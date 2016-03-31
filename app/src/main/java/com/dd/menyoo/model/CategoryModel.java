@@ -8,6 +8,7 @@ public class CategoryModel {
     private String name ;
     private String imageName;
     private String parentID;
+    private String categoryMessage;
 
     public int getCategoryId() {
         return categoryId;
@@ -41,10 +42,19 @@ public class CategoryModel {
         this.imageName = imageName;
     }
 
-    public CategoryModel(int categoryId, String name, String imageName,String parentID) {
+    public String getCategoryMessage() {
+        return categoryMessage;
+    }
+
+    public void setCategoryMessage(String categoryMessage) {
+        this.categoryMessage = categoryMessage;
+    }
+
+    public CategoryModel(int categoryId, String name, String imageName, String parentID,String categoryMessage) {
         this.categoryId = categoryId;
         this.name = name;
         this.imageName = imageName;
         this.parentID = parentID;
+        this.categoryMessage = categoryMessage;
     }
 }

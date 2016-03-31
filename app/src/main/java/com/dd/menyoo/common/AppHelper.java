@@ -1,10 +1,12 @@
 package com.dd.menyoo.common;
 
+import android.app.Dialog;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.media.RingtoneManager;
 import android.net.Uri;
@@ -223,6 +225,24 @@ public class AppHelper {
         // 1dp/ms
         a.setDuration((int)((initialHeight / v.getContext().getResources().getDisplayMetrics().density)*10));
         v.startAnimation(a);
+    }
+
+    public static void showUpdateDialog(Context context){
+        final AlertDialog dialog=new AlertDialog.Builder(context)
+                .setMessage("Please update to latest Version ")
+                .setPositiveButton("Update", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+
+                    }
+                })
+                .setNegativeButton("Explore", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+
+                    }
+                })
+                .show();
     }
 
 }
