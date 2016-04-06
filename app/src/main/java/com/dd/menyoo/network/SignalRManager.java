@@ -35,6 +35,7 @@ public class SignalRManager {
     private static TimerTask backgroundCheck;
     public static boolean shouldAutoConnect = true;
     volatile boolean isConnected;
+    Thread newThread;
 
     private SignalRManager() {
     }
@@ -43,6 +44,7 @@ public class SignalRManager {
         if (mSignalR == null) {
             mSignalR = new SignalRManager();
             shouldAutoConnect = true;
+
         }
 
         return mSignalR;
@@ -201,7 +203,7 @@ public class SignalRManager {
         if (this.isConnected() || this.isConnecting()) {
             return;
         }
-        Thread newThread;
+
         newThread = new Thread() {
             @Override
             public void run() {
@@ -215,7 +217,6 @@ public class SignalRManager {
             newThread.interrupt();
             Log.e("Menyoo", "ConThread destroy");
         }
-
         newThread.start();
         Log.e("Menyoo", "ConThread running");
     }

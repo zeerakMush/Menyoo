@@ -118,8 +118,32 @@ public class TabActivity extends BaseClass implements ISignalRListener {
                 (AppController.isTableOccupiedInAnyRes() && !AppController.getCurrentRestaurent().isTableOccupied()))
             mEtTableCode.setVisibility(View.GONE);
         else {
-            checkBillId(AppController.getCurrentRestaurent().getRestaurantID(),
-                    AppController.getLoginUser().getUserId());
+            if (SignalRManager.getInstance().isConnected())
+                checkBillId(AppController.getCurrentRestaurent().getRestaurantID(),
+                        AppController.getLoginUser().getUserId());
+            else {
+                Thread reconnectThread = new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            SignalRManager.getInstance().ReConnect(new ICallBack() {
+
+                                @Override
+                                public void isConnected(Boolean isConnected) {
+                                    if (isConnected) {
+                                        checkBillId(AppController.getCurrentRestaurent().getRestaurantID(),
+                                                AppController.getLoginUser().getUserId());
+                                    }
+                                }
+                            });
+                        } catch (Exception ex) {
+                            ex.printStackTrace();
+                        }
+                    }
+                });
+
+                reconnectThread.start();
+            }
         }
     }
 
@@ -148,7 +172,7 @@ public class TabActivity extends BaseClass implements ISignalRListener {
         rl_tableCode = (RelativeLayout) findViewById(R.id.rl_table_code);
         rl_tableJoin = (RelativeLayout) findViewById(R.id.rl_table_request_wait);
         rlBanner = (RelativeLayout) findViewById(R.id.rl_banner);
-
+        AppController.setIsFirstTimeOrderAdded(false);
         mOrderKey = new ArrayList<>();
         mOrdersMap = new HashMap<>();
         restaurantModel = AppController.getCurrentRestaurent();
@@ -449,12 +473,12 @@ public class TabActivity extends BaseClass implements ISignalRListener {
             JSONObject jsonObj = new JSONObject(obj.toString());
             if (!jsonObj.has("Status")) {
                 if (jsonObj.has("TableId")) {
-                    int id = jsonObj.getInt("TableId");
+                    String id = jsonObj.getString("TableId");
                     int billId = jsonObj.getInt("BillId");
                     setTable(billId, id);
                     AppController.setIsHost(true);
                 } else {
-                    int tableNumber = jsonObj.getInt("TableNumber");
+                    String tableNumber = jsonObj.getString("TableNumber");
                     int billId = jsonObj.getInt("BillId");
                     String hostName = jsonObj.getString("UserName");
                     int requestId = jsonObj.getInt("RequestId");
@@ -470,7 +494,7 @@ public class TabActivity extends BaseClass implements ISignalRListener {
         }
     }
 
-    private void setTable(int billId, int tableCode) {
+    private void setTable(int billId, String tableCode) {
         AppController.setTableId(tableCode);
         AppController.setBillId(billId);
         registerToRestrauant();
@@ -480,7 +504,7 @@ public class TabActivity extends BaseClass implements ISignalRListener {
         mQrScanBtn.setVisibility(View.GONE);
         isTableAcquired = true;
         checkBill();
-        mTvTableCode.setText(String.format("Table %d", tableCode));
+        mTvTableCode.setText(String.format("Table %s", tableCode));
         if (sharedPref.getIntByKey(GET_BILL_ID) == billId) {
             isCanGetBill = sharedPref.getBooleanByKey(IS_CAN_GET_BILL);
         } else {
@@ -523,7 +547,7 @@ public class TabActivity extends BaseClass implements ISignalRListener {
                 String message = jsonObj.getString("Message");
                 //Toast.makeText(TabActivity.this,message,Toast.LENGTH_LONG).show();
             } else {
-                int id = jsonObj.getInt("TableNumber");
+                String id = jsonObj.getString("TableNumber");
                 int billId = jsonObj.getInt("BillId");
 
                 boolean isHost = !jsonObj.getBoolean("IsGuest");
@@ -557,9 +581,10 @@ public class TabActivity extends BaseClass implements ISignalRListener {
         mTvTableCode.setVisibility(View.GONE);
         isTableAcquired = false;
         isOrderSubmitted = false;
+        bufferBilledItem = new ArrayList<>();
         mOrdersMap = new HashMap<>();
         mOrderKey = new ArrayList<>();
-        AppController.setTableId(0);
+        AppController.setTableId(""+0);
         AppController.setBillId(0);
         orderInQueueBill = -1;
         orderInQueueWaiter = -1;
@@ -568,8 +593,8 @@ public class TabActivity extends BaseClass implements ISignalRListener {
         toSpecials(null);
     }
 
-    public void updateTable(int id) {
-        mTvTableCode.setText(String.format("Table %d", id));
+    public void updateTable(String id) {
+        mTvTableCode.setText(String.format("Table %s", id));
         AppController.setTableId(id);
     }
 
@@ -768,7 +793,7 @@ public class TabActivity extends BaseClass implements ISignalRListener {
     }
 
     @Override
-    public void changeTable(int current) {
+    public void changeTable(String current) {
         updateTable(current);
     }
 
@@ -836,7 +861,7 @@ public class TabActivity extends BaseClass implements ISignalRListener {
      ***/
 
     public void ToQrScanner(View view) {
-        int permissionCheck = ContextCompat.checkSelfPermission(this,
+        /*int permissionCheck = ContextCompat.checkSelfPermission(this,
                 Manifest.permission.CAMERA);
         if (permissionCheck == PackageManager.PERMISSION_GRANTED) {
             Intent i = new Intent(this, QrScanner.class);
@@ -845,7 +870,7 @@ public class TabActivity extends BaseClass implements ISignalRListener {
             ActivityCompat.requestPermissions(this,
                     new String[]{Manifest.permission.CAMERA},
                     MY_PERMISSIONS_REQUEST_CAMERA);
-        }
+        }*/
 
     }
 
@@ -863,7 +888,7 @@ public class TabActivity extends BaseClass implements ISignalRListener {
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         switch (requestCode) {
-            case MY_PERMISSIONS_REQUEST_CAMERA: {
+          /*  case MY_PERMISSIONS_REQUEST_CAMERA: {
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     Intent i = new Intent(this, QrScanner.class);
@@ -874,7 +899,7 @@ public class TabActivity extends BaseClass implements ISignalRListener {
 
                 }
                 return;
-            }
+            }*/
         }
     }
     //endregion
@@ -928,7 +953,7 @@ public class TabActivity extends BaseClass implements ISignalRListener {
 
         try {
             int requestId = jsonObj.getInt("RequestId");
-            int tableNumber = jsonObj.getInt("TableNumber");
+            String tableNumber = jsonObj.getString("TableNumber");
             int billId = jsonObj.getInt("BillId");
             String hostName = jsonObj.getString("UserName");
             return new GuestRequestModel(tableNumber, billId, hostName, requestId);
@@ -963,7 +988,7 @@ public class TabActivity extends BaseClass implements ISignalRListener {
                 if (AppController.getCurrentGuest() != null && !AppController.isHost() && AppController.getCurrentGuest().getRequestId() == reqId) {
                     showGuestDialog(String.format("Host rejected your request"));
                     AppController.setCurrentGuest(null);
-                    AppController.setTableId(0);
+                    AppController.setTableId(""+0);
                     AppController.setBillId(0);
                     tableStateChange(billId, false);
                 }
@@ -1012,12 +1037,12 @@ public class TabActivity extends BaseClass implements ISignalRListener {
         });
     }
 
-    private void joinTableWait(int tableNumber, int billid, String name, int reqId) {
+    private void joinTableWait(String tableNumber, int billid, String name, int reqId) {
         AppController.setCurrentGuest(new GuestRequestModel(tableNumber, billid, name, reqId));
         AppController.setBillId(billid);
         AppController.setTableId(tableNumber);
         tableStateChange(billid, true);
-        showGuestDialog(String.format("Table %d is already occupied. An approval request is sent to the Host, " +
+        showGuestDialog(String.format("Table %s is already occupied. An approval request is sent to the Host, " +
                 "%s to accept you as guest. Please wait.", tableNumber, name));
         runable = new Runnable() {
             @Override
@@ -1032,7 +1057,7 @@ public class TabActivity extends BaseClass implements ISignalRListener {
     public void cancelGuestRequest(View view) {
         tableStateChange(AppController.getBillId(), false);
         AppController.setCurrentGuest(null);
-        AppController.setTableId(0);
+        AppController.setTableId(""+0);
         AppController.setBillId(0);
     }
 
@@ -1094,7 +1119,7 @@ public class TabActivity extends BaseClass implements ISignalRListener {
                         , itemName, ItemComments, unitPrice, orderRequestState));
             }
             updateBasketFragment();
-            generateItemStateChangeNoti();
+            //generateItemStateChangeNoti();
             if (billArr.size() > 0) {
                 llChkBill.setVisibility(View.VISIBLE);
                 llChkBill.setEnabled(true);

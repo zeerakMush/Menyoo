@@ -17,6 +17,8 @@
         android:id="@+id/tv_answer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:autoLink="email"
+        android:textColorLink="@color/blue_iphone"
         android:text="@string/dummy_text"
         android:textColor="@color/sub_text_color"
         />

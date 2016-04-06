@@ -10,6 +10,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.dd.menyoo.common.AppHelper;
+import com.dd.menyoo.model.UserModel;
 import com.dd.menyoo.network.NetworkManagerOld;
 import com.dd.menyoo.network.TaskCompleted;
 
@@ -60,6 +61,7 @@ public class RegistrationActivity extends BaseClass {
     public void registerUser(){
         if(isFieldFill()){
             if(validateField()){
+                AppHelper.getInstance().showProgressDialog("Please wait",this);
                 List<NameValuePair> nameValuePairs = new ArrayList<>(
                         2);
                 nameValuePairs.add(new BasicNameValuePair("firstName",
@@ -81,6 +83,7 @@ public class RegistrationActivity extends BaseClass {
                     public void onTaskFailed() {
                         // TODO Auto-generated method stub
                         AppHelper.showConnectionAlert(RegistrationActivity.this);
+                        AppHelper.getInstance().hideProgressDialog();
                     }
 
                     @Override
@@ -88,6 +91,7 @@ public class RegistrationActivity extends BaseClass {
                         // TODO Auto-generated method stub
                         Log.e("Menyoo",obj.toString());
                         afterAccountRegister(obj);
+                        AppHelper.getInstance().hideProgressDialog();
                     }
                 });
 
@@ -109,8 +113,14 @@ public class RegistrationActivity extends BaseClass {
         try {
             JSONObject jsonObject = new JSONObject(obj.toString());
             Toast.makeText(this,jsonObject.getString("Message"),Toast.LENGTH_LONG).show();
-            if(jsonObject.getString("Status").equals("Success"))
-                startActivity(new Intent(this,SignInActivity.class));
+            int userID;
+            if(jsonObject.getString("Status").equals("Success")){
+                userID = jsonObject.getInt("UserId");
+                Intent intent = new Intent(this,VerifyAccount.class);
+                intent.putExtra("UserID",userID);
+                startActivity(intent);
+            }
+
         } catch (JSONException e) {
             e.printStackTrace();
         }

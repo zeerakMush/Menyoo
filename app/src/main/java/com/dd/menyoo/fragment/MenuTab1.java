@@ -5,7 +5,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -19,7 +18,6 @@ import com.dd.menyoo.TabActivity;
 import com.dd.menyoo.adapter.FullMenuAdapter;
 import com.dd.menyoo.adapter.MenuTabAdapter2;
 import com.dd.menyoo.adapter.SectionedGridRecyclerViewAdapter;
-import com.dd.menyoo.adapter.SpecialTabAdapter;
 import com.dd.menyoo.common.AppController;
 import com.dd.menyoo.common.AppHelper;
 import com.dd.menyoo.model.CategoryModel;
@@ -34,6 +32,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -48,10 +48,10 @@ public class MenuTab1 extends BaseFragment {
 
     RecyclerView rvMenuTab1, rvMenuTab2;
     TextView tvTopHeader;
-    ArrayList<CategoryModel> mCategoryArr;
     ProgressBar pbMenu;
-    ArrayList<MenuModel> mMenuItemArray;
-    ArrayList<SectionModel> mSectionArray;
+    HashMap<String, ArrayList<CategoryModel>> mHashItemArray;
+    HashMap<Integer, String> mMapNames;
+    ArrayList<String> mCategoryKeys ;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -66,22 +66,19 @@ public class MenuTab1 extends BaseFragment {
         rvMenuTab2 = (RecyclerView) view.findViewById(R.id.rv_menuTab2);
         tvTopHeader = (TextView) view.findViewById(R.id.tv_topHeader);
         pbMenu = (ProgressBar) view.findViewById(R.id.pb_menu);
-        mSectionArray = new ArrayList<>();
-        setAdapter();
+        //mSectionArray = new ArrayList<>();
         getCategories();
 
     }
-
     FullMenuAdapter fmAdapter;
-    MenuTabAdapter2 mtAdapter;
     SectionedGridRecyclerViewAdapter mSectionedAdapter;
 
     public void setAdapter() {
-        mCategoryArr = new ArrayList<>();
+       // mCategoryArr = new ArrayList<>();
         fmAdapter = new FullMenuAdapter(getActivity());
         rvMenuTab1.setHasFixedSize(true);
         rvMenuTab1.setLayoutManager(new GridLayoutManager(getActivity(), 2));
-        fmAdapter.setData(mCategoryArr);
+        fmAdapter.setData(mHashItemArray,mCategoryKeys);
         fmAdapter.setmClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -93,8 +90,6 @@ public class MenuTab1 extends BaseFragment {
         });
 
         rvMenuTab1.setAdapter(fmAdapter);
-
-
     }
 
     protected void getCategories() {
@@ -117,7 +112,7 @@ public class MenuTab1 extends BaseFragment {
             public void onTaskCompletedSuccessfully(Object obj) {
                 // TODO Auto-generated method stub
                 Log.e("Menyoo", obj.toString());
-                afterGetCategories(obj);
+                afterGetCategoriesNew(obj);
             }
         });
         String url = String.format("GetRestaurantCategories?restaurantid=%d",
@@ -128,6 +123,85 @@ public class MenuTab1 extends BaseFragment {
     }
 
 
+
+
+    private void afterGetCategoriesNew(Object obj) {
+        try {
+            pbMenu.setVisibility(View.GONE);
+            JSONArray jsonArray = new JSONArray(obj.toString());
+            JSONArray categoryArray = jsonArray.getJSONArray(0);
+            mCategoryKeys = new ArrayList<>();
+            mHashItemArray = new HashMap<>();
+            mMapNames = new HashMap<>();
+            for (int index = 0; index < categoryArray.length(); index++) {
+                mMapNames.put(categoryArray.getJSONObject(index).getInt("CategoryId"),
+                        categoryArray.getJSONObject(index).getString("Name"));
+                mCategoryKeys.add(categoryArray.getJSONObject(index).getString("CategoryId"));
+            }
+            for (int i = 1; i < jsonArray.length(); i++) {
+                JSONArray jItems = jsonArray.getJSONArray(i);
+                ArrayList<CategoryModel> categorys = new ArrayList<>();
+                String key="";
+                for (int j = 0; j < jItems.length(); j++){
+                    JSONObject jObj = jItems.getJSONObject(j);
+                    int id = jObj.getInt("CategoryId");
+                    String name = jObj.getString("Name");
+                    String imageNAme = jObj.getString("DisplayPicture");
+                    String parentID = jObj.getString("ParentId");
+                    String categoryMessage = jObj.getString("CategoryMessage");
+                    key = parentID;
+                    categorys.add(new CategoryModel(id,name,imageNAme,parentID,categoryMessage));
+                }
+                mHashItemArray.put(key,categorys);
+
+            }
+            setmSections();
+            rvMenuTab1.setAdapter(mSectionedAdapter);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+    public void setmSections(){
+        List<SectionedGridRecyclerViewAdapter.Section> sections = new ArrayList<>();
+        int nextPosition=0;
+        String key,title;
+        for(int i = 0; i<mCategoryKeys.size(); i++){
+            key = mCategoryKeys.get(i);
+            title = (mMapNames.get(Integer.parseInt(key)));
+            sections.add(new SectionedGridRecyclerViewAdapter.Section(nextPosition, title));
+            if(mHashItemArray.containsKey(key))
+                 nextPosition += (mHashItemArray.get(key)).size();
+            /*nextPosition += section.getItemCounts();*/
+        }
+        setAdapter();
+        SectionedGridRecyclerViewAdapter.Section[] dummy = new SectionedGridRecyclerViewAdapter.Section[sections.size()];
+        mSectionedAdapter = new SectionedGridRecyclerViewAdapter(getActivity(), R.layout.section,
+                R.id.section_text, R.id.space, rvMenuTab1, fmAdapter);
+        mSectionedAdapter.setSections(sections.toArray(dummy));
+
+    }
+//region extra old methode
+   /* public void setSections() {
+        updateSectionItemsCount();
+        List<SectionedGridRecyclerViewAdapter.Section> sections = new ArrayList<>();
+        int nextPosition = 0;
+        for (SectionModel section : mSectionArray) {
+            sections.add(new SectionedGridRecyclerViewAdapter.Section(nextPosition, section.getSectionName()));
+            nextPosition += section.getItemCounts();
+        }
+        SectionedGridRecyclerViewAdapter.Section[] dummy = new SectionedGridRecyclerViewAdapter.Section[sections.size()];
+        mSectionedAdapter = new SectionedGridRecyclerViewAdapter(getActivity(), R.layout.section, R.id.section_text, R.id.space, rvMenuTab1, fmAdapter);
+        mSectionedAdapter.setSections(sections.toArray(dummy));
+    }
+
+
+    public void updateSectionItemsCount() {
+        for (int index = 0; index < mSectionArray.size(); index++) {
+            for (int item = 0; item < mCategoryArr.size(); item++) {
+                mSectionArray.get(index).updateItemCount(Integer.parseInt(mCategoryArr.get(item).getParentID()));
+            }
+        }
+    }
 
     private void afterGetCategories(Object obj) {
         try {
@@ -141,7 +215,7 @@ public class MenuTab1 extends BaseFragment {
                 String parentID = jObj.getString("ParentId");
                 String categoryMessage = jObj.getString("CategoryMessage");
                 if (parentID != null && !parentID.equals("null")) {
-                    mCategoryArr.add(new CategoryModel(id, name, imageNAme, parentID,categoryMessage));
+                    mCategoryArr.add(new CategoryModel(id, name, imageNAme, parentID, categoryMessage));
                 } else {
                     SectionModel sectionModel = new SectionModel();
                     sectionModel.setCategoryID(id);
@@ -154,26 +228,7 @@ public class MenuTab1 extends BaseFragment {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-    }
+    }*/
+    //endregion
 
-    public void setSections() {
-        updateSectionItemsCount();
-        List<SectionedGridRecyclerViewAdapter.Section> sections = new ArrayList<>();
-        int nextPosition = 0;
-        for (SectionModel section : mSectionArray) {
-            sections.add(new SectionedGridRecyclerViewAdapter.Section(nextPosition, section.getSectionName()));
-            nextPosition += section.getItemCounts();
-        }
-        SectionedGridRecyclerViewAdapter.Section[] dummy = new SectionedGridRecyclerViewAdapter.Section[sections.size()];
-        mSectionedAdapter = new SectionedGridRecyclerViewAdapter(getActivity(), R.layout.section, R.id.section_text, rvMenuTab1, fmAdapter);
-        mSectionedAdapter.setSections(sections.toArray(dummy));
-    }
-
-    public void updateSectionItemsCount() {
-        for (int index = 0; index < mSectionArray.size(); index++) {
-            for (int item = 0; item < mCategoryArr.size(); item++) {
-                mSectionArray.get(index).updateItemCount(Integer.parseInt(mCategoryArr.get(item).getParentID()));
-            }
-        }
-    }
 }

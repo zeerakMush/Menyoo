@@ -19,11 +19,14 @@ public class WifiReceiver extends BroadcastReceiver {
         ConnectivityManager conMan = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo netInfo = conMan.getActiveNetworkInfo();
         //baseActivity.showUploadFailedError();
-        if (netInfo != null && netInfo.getType() == ConnectivityManager.TYPE_WIFI && AppController.isActivityVisible() &&
+        if (netInfo != null &&
+                (netInfo.getType() == ConnectivityManager.TYPE_WIFI || netInfo.getType() == ConnectivityManager.TYPE_MOBILE)
+                && AppController.isActivityVisible() &&
                 AppController.getCurrentActivity() instanceof TabActivity){
             ((TabActivity)AppController.getCurrentActivity()).registerToRestrauant();
         }else{
             SignalRManager.getInstance().forceDisconnect();
         }
+
     }
 }

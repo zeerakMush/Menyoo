@@ -301,7 +301,7 @@ public class Action extends BaseFragment implements View.OnClickListener {
             String message = jObj.getString("Message");
             Toast.makeText(getActivity(),message,Toast.LENGTH_LONG).show();
             if(status.equals("Success")){
-                int tableNo = jObj.getInt("TableNumber");
+                String tableNo = jObj.getString("TableNumber");
                 ((TabActivity)getActivity()).updateTable(tableNo);
             }
 

@@ -11,6 +11,7 @@ import android.widget.Toast;
 import com.dd.menyoo.common.AppController;
 import com.dd.menyoo.common.AppHelper;
 import com.dd.menyoo.common.SharedPrefManager;
+import com.dd.menyoo.gcm.RegistrationIntentService;
 import com.dd.menyoo.model.FacebookUserModel;
 import com.dd.menyoo.model.UserModel;
 import com.dd.menyoo.network.NetworkManagerOld;
@@ -72,6 +73,8 @@ public class LoginActivity extends BaseClass implements FacebookCallback<LoginRe
     }
 
     private void showRestaurantActivity() {
+        Intent intent = new Intent(this, RegistrationIntentService.class);
+        startService(intent);
         Intent intentAct = new Intent(LoginActivity.this,
                 MenuActivity.class);
         intentAct.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
@@ -186,7 +189,7 @@ public class LoginActivity extends BaseClass implements FacebookCallback<LoginRe
                 String email = jsonObject.getString("Email");
                 String phoneNumber= jsonObject.getString("PhoneNumber");
                 String displayPicture = jsonObject.getString("DisplayPictureFile");
-                user = new UserModel(id,firstName,lastName,email,phoneNumber,displayPicture);
+                user = new UserModel(id,firstName,lastName,email,phoneNumber,displayPicture,false);
                 AppController.setLoginUser(user);
                 sharedPreferences.SetUserIsLoggedIn(user);
                 showRestaurantActivity();

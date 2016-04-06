@@ -170,7 +170,7 @@ public class SignalRListener {
         }
     }
 
-    public void changeTable(int pre, final int current){
+    public void changeTable(String pre, final String current){
         final ISignalRListener listener = (ISignalRListener) getCurrentActivity();
 
         if (listener != null) {

@@ -50,12 +50,14 @@
         android:text="@string/forget_password"
         android:paddingTop="10dp"
         android:paddingBottom="10dp"
-        android:textSize="15sp"
-        android:visibility="gone"
+        android:textSize="14.6sp"
+        android:visibility="visible"
+        android:textStyle="normal"
         android:layout_below="@id/et_password"
         android:background="@color/transparent"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
+        android:onClick="toForgetPwd"
         android:layout_height="wrap_content" />
 
     <Button

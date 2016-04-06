@@ -15,6 +15,7 @@ public class MenuModel extends BaseClassModel {
     private boolean isfirstTimeItem;
     private int itemType;
     private boolean isExtraData = false;
+    private String categoryName;
 
 
     public String getTitle() {
@@ -97,6 +98,14 @@ public class MenuModel extends BaseClassModel {
 
     public void setExtraData(boolean extraData) {
         isExtraData = extraData;
+    }
+
+    public String getCategoryName() {
+        return categoryName;
+    }
+
+    public void setCategoryName(String categoryName) {
+        this.categoryName = categoryName;
     }
 
     public MenuModel() {

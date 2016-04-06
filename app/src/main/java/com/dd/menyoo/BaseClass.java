@@ -80,13 +80,14 @@ public abstract class BaseClass extends AppCompatActivity{
                 .show();
     }
 
-    public void showDialogFromNotUi(final String message){
-        runOnUiThread(new Runnable(){
-            @Override
-            public void run(){
-                showDisableDialog(BaseClass.this,message);
-            }
-        });
+    public void showDialogFromNotUi(final String message) {
+        if (getString(R.string.url_offline).contains("MenyooDev"))
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    showDisableDialog(BaseClass.this, message);
+                }
+            });
 
     }
 

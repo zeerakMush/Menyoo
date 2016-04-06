@@ -7,11 +7,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.Toast;
 
-import com.dlazaro66.qrcodereaderview.QRCodeReaderView;
-import com.google.zxing.qrcode.QRCodeReader;
+//import com.dlazaro66.qrcodereaderview.QRCodeReaderView;
+//import com.google.zxing.qrcode.QRCodeReader;
 
-public class QrScanner extends AppCompatActivity implements QRCodeReaderView.OnQRCodeReadListener {
-    private QRCodeReaderView mydecoderview;
+public class QrScanner extends AppCompatActivity /*implements QRCodeReaderView.OnQRCodeReadListener*/ {
+  /*  private QRCodeReaderView mydecoderview;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,8 +25,8 @@ public class QrScanner extends AppCompatActivity implements QRCodeReaderView.OnQ
     public void onQRCodeRead(String text, PointF[] points) {
         //Toast.makeText(this,text,Toast.LENGTH_LONG).show();
         Intent returnIntent = new Intent();
-        returnIntent.putExtra("result",text);
-        setResult(Activity.RESULT_OK,returnIntent);
+        returnIntent.putExtra("result", text);
+        setResult(Activity.RESULT_OK, returnIntent);
         finish();
     }
 
@@ -49,6 +49,7 @@ public class QrScanner extends AppCompatActivity implements QRCodeReaderView.OnQ
     @Override
     protected void onResume() {
         super.onResume();
-        mydecoderview.getCameraManager().startPreview();;
-    }
+        mydecoderview.getCameraManager().startPreview();
+        ;
+    }*/
 }

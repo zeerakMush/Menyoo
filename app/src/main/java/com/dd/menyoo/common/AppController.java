@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
 import android.content.res.Resources;
+import android.support.multidex.MultiDex;
 
 import com.dd.menyoo.model.GuestRequestModel;
 import com.dd.menyoo.model.RestaurantModel;
@@ -22,7 +23,7 @@ public class AppController extends Application {
     private static AppController mInstance;
     private static UserModel loginUser;
     private static RestaurantModel currentRestaurent;
-    private static int TableId;
+    private static String TableId;
     private static int billId;
     private static SharedPrefManager sharedPrefManager;
     private static Activity mCurrentActivity = null;
@@ -39,6 +40,7 @@ public class AppController extends Application {
         super.onCreate();
         mInstance = this;
         mContext = getApplicationContext();
+        MultiDex.install(this);
         sharedPrefManager = new SharedPrefManager(this);
     }
 
@@ -83,11 +85,11 @@ public class AppController extends Application {
         AppController.currentRestaurent = currentRestaurent;
     }
 
-    public static int getTableId() {
+    public static String getTableId() {
         return TableId;
     }
 
-    public static void setTableId(int tableId) {
+    public static void setTableId(String tableId) {
         TableId = tableId;
     }
 
@@ -159,5 +161,8 @@ public class AppController extends Application {
         AppController.isFirstTimeOrderAdded = isFirstTimeOrderAdded;
     }
 
-
+    @Override
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(base);
+    }
 }

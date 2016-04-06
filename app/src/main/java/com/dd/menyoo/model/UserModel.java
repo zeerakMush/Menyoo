@@ -11,8 +11,10 @@ public class UserModel {
     String phoneNumber;
     String displayPicturePAth;
     boolean isGuest;
+    boolean isVerificationRequired;
 
-    public UserModel(int userId, String firstName, String lastName, String emailAddress, String phoneNumber, String displayPicturePAth) {
+    public UserModel(int userId, String firstName, String lastName,
+                     String emailAddress, String phoneNumber, String displayPicturePAth,boolean isVerificationRequired) {
         this.userId = userId;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -20,6 +22,7 @@ public class UserModel {
         this.phoneNumber = phoneNumber;
         this.displayPicturePAth = displayPicturePAth;
         this.isGuest = false;
+        this.isVerificationRequired = isVerificationRequired;
     }
     public UserModel(){
 

@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_gravity="center"
+    android:background="@drawable/bg_image_2"
+    android:gravity="center"
+    android:padding="27dp"
+    tools:context="com.dd.menyoo.RegistrationActivity">
+
+    <ImageView
+        android:id="@+id/icon"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="150dp"
+        android:gravity="center"
+        android:src="@drawable/logo_main"
+        android:textColor="@color/btn_color_default"
+        android:textSize="50sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/icon"
+        android:layout_marginBottom="10dp"
+        android:layout_marginTop="10dp"
+        android:gravity="center"
+        android:text="Verify You Account"
+        android:textSize="20sp"
+        android:textStyle="bold"
+
+        />
+
+    <EditText
+        android:id="@+id/et_verification"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/title"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp"
+        android:hint="Email Verification Code"
+        android:inputType="number"
+        android:textColor="@color/white"
+        android:textColorHint="@color/white" />
+
+
+    <Button
+        android:id="@+id/btn_signIn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="20dp"
+        android:onClick="verifyEmail"
+        android:paddingBottom="10dp"
+        android:paddingTop="10dp"
+        android:text="Verify"
+        android:textSize="17sp" />
+
+</RelativeLayout>

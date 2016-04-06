@@ -8,6 +8,7 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -17,6 +18,7 @@ import android.widget.Toast;
 import com.dd.menyoo.R;
 import com.dd.menyoo.TabActivity;
 import com.dd.menyoo.common.AppController;
+import com.dd.menyoo.common.AppHelper;
 import com.dd.menyoo.model.MenuModel;
 import com.dd.menyoo.model.OrderModel;
 
@@ -30,7 +32,7 @@ public class OrderPlacement extends BaseFragment implements View.OnClickListener
         // Required empty public constructor
     }
     MenuModel mMenuModel;
-    TextView mTitle,mPrice,mDescription,mQuantity,mTotalPrice;
+    TextView mTitle,mPrice,mDescription,mQuantity,mTotalPrice,mViewMore;
     Button mAddBTn,mSubBtn,mAddToBasket;
     EditText mComment ;
     int quantity;
@@ -50,12 +52,23 @@ public class OrderPlacement extends BaseFragment implements View.OnClickListener
         mPrice = (TextView)view.findViewById(R.id.tv_price);
         mQuantity = (TextView)view.findViewById(R.id.tv_quantity);
         mDescription = (TextView)view.findViewById(R.id.tv_description);
+        mViewMore = (TextView)view.findViewById(R.id.tv_viewmore);
         mTotalPrice = (TextView)view.findViewById(R.id.tv_total);
         mAddBTn = (Button)view.findViewById(R.id.btn_add);
         mSubBtn = (Button)view.findViewById(R.id.btn_sub);
         mAddToBasket = (Button) view.findViewById(R.id.btn_addToBasket);
         mComment = (EditText)view.findViewById(R.id.et_comment);
         mComment.addTextChangedListener(commentWatcher);
+
+        ViewTreeObserver vto = mDescription.getViewTreeObserver();
+        vto.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                if (AppHelper.isTextViewEllipsized(mDescription)) {
+                    mViewMore.setVisibility(View.VISIBLE);
+                }
+            }
+        });
         setListeners();setFeilds();
     }
 
@@ -81,6 +94,7 @@ public class OrderPlacement extends BaseFragment implements View.OnClickListener
         mSubBtn.setOnClickListener(this);
         mAddToBasket.setOnClickListener(this);
         mAddBTn.setOnClickListener(this);
+        mViewMore.setOnClickListener(this);
     }
 
     @Override
@@ -97,6 +111,10 @@ public class OrderPlacement extends BaseFragment implements View.OnClickListener
                     AppController.setIsFirstTimeOrderAdded(true);
 
                 ((TabActivity)getActivity()).addOrder(orderFactory());
+                break;
+            case R.id.tv_viewmore:
+                mDescription.setMaxLines(Integer.MAX_VALUE);
+                mViewMore.setVisibility(View.GONE);
                 break;
 
         }

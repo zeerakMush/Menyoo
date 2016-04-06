@@ -54,17 +54,36 @@
                     android:text="Special Chinnes New Year Offer"
                     android:ellipsize="end"
                     />
-                <TextView
-                    android:id="@+id/tv_description"
+                <FrameLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:textColor="@color/secondary_text"
-                    android:textSize="14sp"
-                    android:layout_below="@id/tv_title_menu"
-                    android:text="@string/dummy_text"
-                    android:ellipsize="end"
-                    />
+                    android:layout_below="@id/tv_title_menu">
+                    <TextView
+                        android:id="@+id/tv_description"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:textColor="@color/secondary_text"
+                        android:textSize="14sp"
+                        android:maxLines="4"
+                        android:text="@string/dummy_text"
+                        android:ellipsize="end"
+                        />
+                    <TextView
+                        android:id="@+id/tv_viewmore"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingRight="10dp"
+                        android:paddingLeft="10dp"
+                        android:layout_gravity="end|bottom"
+                        android:textStyle=""
+                        android:visibility="gone"
+                        android:textColor="@drawable/btn_color"
+                        android:layout_marginRight="1dp"
+                        android:background="@color/black"
+                        android:text="@string/view_more"/>
+                </FrameLayout>
+
             </RelativeLayout>
             <View
                 android:layout_width="match_parent"

@@ -9,6 +9,8 @@ public class CategoryModel {
     private String imageName;
     private String parentID;
     private String categoryMessage;
+    private int priority;
+
 
     public int getCategoryId() {
         return categoryId;

@@ -9,11 +9,15 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.media.RingtoneManager;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
 import android.support.v7.app.AlertDialog;
 import android.text.Html;
+import android.text.Layout;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
@@ -63,7 +67,7 @@ public class AppHelper {
     }
 
     public static boolean isPasswordValid(String password) {
-        return (password.length() > 3);
+        return (password.length() > 5);
     }
 
     public static boolean isPasswordsMatch(String pwd1, String pwd2) {
@@ -149,7 +153,7 @@ public class AppHelper {
 
     public void NotificationsBuilder(String message, Context context, NotificationManager nm){
         // Create notification
-        Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+        /*Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(context)
                 .setSmallIcon(R.drawable.icon)
                 .setContentTitle(context.getString(R.string.app_name))
@@ -170,7 +174,7 @@ public class AppHelper {
 
         notificationBuilder.setContentIntent(contentIntent);
         nm.notify(id, notificationBuilder.build());
-        id++;
+        id++;*/
     }
 
     public static void expand(final View v) {
@@ -226,24 +230,40 @@ public class AppHelper {
         a.setDuration((int)((initialHeight / v.getContext().getResources().getDisplayMetrics().density)*10));
         v.startAnimation(a);
     }
-
-    public static void showUpdateDialog(Context context){
-        final AlertDialog dialog=new AlertDialog.Builder(context)
-                .setMessage("Please update to latest Version ")
-                .setPositiveButton("Update", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-
-                    }
-                })
-                .setNegativeButton("Explore", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-
-                    }
-                })
-                .show();
+    public static boolean isNetworkAvailable(Context conxt) {
+        ConnectivityManager connectivityManager = (ConnectivityManager) conxt
+                .getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager
+                .getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
+
+    public static boolean isTextViewEllipsized(final TextView textView) {
+        // Initialize the resulting variable
+        boolean result = false;
+        // Check if the supplied TextView is not null
+        if (textView != null) {
+            // Check if ellipsizing the text is enabled
+            final TextUtils.TruncateAt truncateAt = textView.getEllipsize();
+            if (truncateAt != null && !TextUtils.TruncateAt.MARQUEE.equals(truncateAt)) {
+                // Retrieve the layout in which the text is rendered
+                final Layout layout = textView.getLayout();
+                if (layout != null) {
+                    // Iterate all lines to search for ellipsized text
+                    for (int index = 0; index < layout.getLineCount(); ++index) {
+                        // Check if characters have been ellipsized away within this line of text
+                        result = layout.getEllipsisCount(index) > 0;
+                        // Stop looping if the ellipsis character has been found
+                        if (result) {
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+        return result;
+    }
+
 
 }
 

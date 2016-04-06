@@ -39,6 +39,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -138,6 +140,7 @@ public class SpecialMenu extends BaseFragment {
                         imageNAme,prize,id,isSpecial,discount,isPopular,isFirstTime));
             }
             pbWait.setVisibility(View.GONE);
+            Collections.reverse(mSpecailMenuArray);
             scAdapter.setData(mSpecailMenuArray);
             scAdapter.notifyDataSetChanged();
 

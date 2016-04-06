@@ -9,35 +9,47 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.Button;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.dd.menyoo.R;
 import com.dd.menyoo.TabActivity;
 import com.dd.menyoo.common.AppController;
+import com.dd.menyoo.common.AppHelper;
 import com.dd.menyoo.fragment.OrderPlacement;
+import com.dd.menyoo.model.CategoryKeyModel;
 import com.dd.menyoo.model.MenuModel;
 
 import org.w3c.dom.Text;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Created by Administrator on 19-Feb-16.
  */
-public class MenuTabAdapter2 extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
+public class MenuTabAdapter2 extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private ArrayList<MenuModel> mDataList;
+    private HashMap<Integer,ArrayList<MenuModel>> mMapArray;
+    private ArrayList<CategoryKeyModel> ckmArray;
+
     private int mRowIndex = -1;
     Context mCtx;
-    private int[] mColors = new int[]{R.drawable.sample_1,R.drawable.sample_2,R.drawable.sample_3};
+    private int[] mColors = new int[]{R.drawable.sample_1, R.drawable.sample_2, R.drawable.sample_3};
 
 
     public MenuTabAdapter2(Context ctx) {
         this.mCtx = ctx;
     }
 
-    public void setData(ArrayList<MenuModel> data) {
-        if (mDataList != data) {
-            mDataList = data;
+    public void setData(HashMap<Integer,ArrayList<MenuModel>> mapArray,ArrayList<CategoryKeyModel> ckmArr) {
+        mDataList = new ArrayList<>();
+        if (mapArray != mMapArray) {
+            this.mMapArray = mapArray;
+            for(CategoryKeyModel ckm:ckmArr){
+                if(mMapArray.containsKey(ckm.getKey()))
+                     mDataList.addAll(mMapArray.get(ckm.getKey()));
+            }
             notifyDataSetChanged();
         }
     }
@@ -56,83 +68,65 @@ public class MenuTabAdapter2 extends RecyclerView.Adapter<RecyclerView.ViewHolde
     public void onBindViewHolder(RecyclerView.ViewHolder rawHolder, final int position) {
         final ItemViewHolder holder = (ItemViewHolder) rawHolder;
         final MenuModel menuItem = mDataList.get(position);
+
+        holder.tvSectionName.setVisibility(View.GONE);
+        holder.spaceView.setVisibility(View.GONE);
+        if(position==0&&!menuItem.getCategoryName().equalsIgnoreCase("General")){
+            holder.tvSectionName.setVisibility(View.VISIBLE);
+            holder.tvSectionName.setText(menuItem.getCategoryName());
+        }else if(position!=0&&!mDataList.get(position-1).getCategoryName().equals(menuItem.getCategoryName())){
+            holder.tvSectionName.setVisibility(View.VISIBLE);
+            holder.tvSectionName.setText(menuItem.getCategoryName());
+            holder.spaceView.setVisibility(View.VISIBLE);
+        }
+
         holder.postiionNumber = position;
         holder.tvTitle.setText(menuItem.getTitle());
         holder.tvDescrition.setText(menuItem.getDescription());
-        holder.tvPrice.setText(String.format("RM %.2f",menuItem.getPrice()));
-        if(AppController.getCurrentRestaurent().isReadOnly()){
+        holder.tvPrice.setText(String.format("RM %.2f", menuItem.getPrice()));
+        if (AppController.getCurrentRestaurent().isReadOnly()) {
             holder.btnAdd.setVisibility(View.GONE);
         }
         holder.btnAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 //Toast.makeText(mCtx,"Amount Added" + menuItem.getPrice(),Toast.LENGTH_LONG).show();
-                if(!AppController.getLoginUser().isGuest()&&
+                if (!AppController.getLoginUser().isGuest() &&
                         AppController.getCurrentRestaurent().isRestaurantActive()
-                        &&!AppController.isAppDisable()){
-                    if(((TabActivity)mCtx).checkIsTableAcquired()){
+                        && !AppController.isAppDisable()) {
+                    if (((TabActivity) mCtx).checkIsTableAcquired()) {
                         OrderPlacement orderPlacement = new OrderPlacement();
                         orderPlacement.setmMenuModel(menuItem);
-                        ((TabActivity)mCtx).replaceFragment(orderPlacement,true);
-                    }else{
-                        ((TabActivity)mCtx).showTableDialog();
+                        ((TabActivity) mCtx).replaceFragment(orderPlacement, true);
+                    } else {
+                        ((TabActivity) mCtx).showTableDialog();
                     }
-                }else{
-                    if(AppController.getLoginUser().isGuest())
-                        ((TabActivity)mCtx).showDisableDialog(mCtx,mCtx.getString(R.string.guest_disable));
-                    else if(!AppController.getCurrentRestaurent().isRestaurantActive())
-                        ((TabActivity)mCtx).showDisableDialog(mCtx,mCtx.getString(R.string.restaurant_disbled_message));
-                    else if(AppController.isAppDisable())
-                        ((TabActivity)mCtx).showDisableDialog(mCtx,mCtx.getString(R.string.app_disable_message));
+                } else {
+                    if (AppController.getLoginUser().isGuest())
+                        ((TabActivity) mCtx).showDisableDialog(mCtx, mCtx.getString(R.string.guest_disable));
+                    else if (!AppController.getCurrentRestaurent().isRestaurantActive())
+                        ((TabActivity) mCtx).showDisableDialog(mCtx, mCtx.getString(R.string.restaurant_disbled_message));
+                    else if (AppController.isAppDisable())
+                        ((TabActivity) mCtx).showDisableDialog(mCtx, mCtx.getString(R.string.app_disable_message));
                 }
 
             }
         });
         holder.tvViewMore.setVisibility(View.GONE);
         holder.tvDescrition.setMaxLines(3);
-        /*Layout layout = holder.tvDescrition.getLayout();
-        if (layout != null) {
-            // The TextView has already been laid out
-            // We can check whether it's ellipsized immediately
-            if (layout.getEllipsisCount(layout.getLineCount()-1) > 0) {
-                // Text is ellipsized in re-used view, show 'Expand' button
-                holder.tvViewMore.setVisibility(View.VISIBLE);
-            }
-        } else {
-            // The TextView hasn't been laid out, so we need to set an observer
-            // The observer fires once layout's done, when we can check the ellipsizing
-            ViewTreeObserver vto = holder.tvDescrition.getViewTreeObserver();
-            vto.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-                @Override
-                public void onGlobalLayout() {
-                    Layout layout = holder.tvDescrition.getLayout();
-                    if (layout.getEllipsisCount(layout.getLineCount() - 1) > 0) {
-                        // Text is ellipsized in newly created view, show 'Expand' button
-                        holder.tvViewMore.setVisibility(View.VISIBLE);
-                    }
-
-                    // Remove the now unnecessary observer
-                    // It wouldn't fire again for reused views anyways
-                    ViewTreeObserver obs = holder.tvDescrition.getViewTreeObserver();
-                    obs.removeGlobalOnLayoutListener(this);
-                }
-            });
-        }*/
-
-
-            ViewTreeObserver vto = holder.tvDescrition.getViewTreeObserver();
+        ViewTreeObserver vto = holder.tvDescrition.getViewTreeObserver();
         vto.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
             public void onGlobalLayout() {
-                if(isTextViewEllipsized(holder.tvDescrition)){
+                if (AppHelper.isTextViewEllipsized(holder.tvDescrition)) {
                     holder.tvViewMore.setVisibility(View.VISIBLE);
                     mDataList.get(holder.postiionNumber).setExtraData(true);
                 }
             }
         });
-        if(mDataList.get(position).isExtraData()){
+        if (mDataList.get(position).isExtraData()) {
             holder.tvViewMore.setVisibility(View.VISIBLE);
-        }else
+        } else
             holder.tvViewMore.setVisibility(View.GONE);
         holder.tvViewMore.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -141,38 +135,11 @@ public class MenuTabAdapter2 extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 holder.tvDescrition.setMaxLines(Integer.MAX_VALUE);
             }
         });
-        if (isTextViewEllipsized(holder.tvDescrition)) {
+        if (AppHelper.isTextViewEllipsized(holder.tvDescrition)) {
             holder.tvViewMore.setVisibility(View.VISIBLE);
             mDataList.get(position).setExtraData(true);
         }
 
-    }
-
-
-    public static boolean isTextViewEllipsized(final TextView textView) {
-        // Initialize the resulting variable
-        boolean result = false;
-        // Check if the supplied TextView is not null
-        if (textView != null) {
-            // Check if ellipsizing the text is enabled
-            final TextUtils.TruncateAt truncateAt = textView.getEllipsize();
-            if (truncateAt != null && !TextUtils.TruncateAt.MARQUEE.equals(truncateAt)) {
-                // Retrieve the layout in which the text is rendered
-                final Layout layout = textView.getLayout();
-                if (layout != null) {
-                    // Iterate all lines to search for ellipsized text
-                    for (int index = 0; index < layout.getLineCount(); ++index) {
-                        // Check if characters have been ellipsized away within this line of text
-                        result = layout.getEllipsisCount(index) > 0;
-                        // Stop looping if the ellipsis character has been found
-                        if (result) {
-                            break;
-                        }
-                    }
-                }
-            }
-        }
-        return result;
     }
 
 
@@ -184,7 +151,8 @@ public class MenuTabAdapter2 extends RecyclerView.Adapter<RecyclerView.ViewHolde
     private class ItemViewHolder extends RecyclerView.ViewHolder {
 
 
-        private TextView tvTitle,tvDescrition,tvPrice,tvViewMore;
+        private TextView tvTitle, tvDescrition, tvPrice, tvViewMore,tvSectionName;
+        private View spaceView;
         private Button btnAdd;
         private int postiionNumber;
 
@@ -193,8 +161,10 @@ public class MenuTabAdapter2 extends RecyclerView.Adapter<RecyclerView.ViewHolde
             tvTitle = (TextView) itemView.findViewById(R.id.tv_title_menu);
             tvDescrition = (TextView) itemView.findViewById(R.id.tv_description);
             tvPrice = (TextView) itemView.findViewById(R.id.tv_price);
-            btnAdd = (Button)itemView.findViewById(R.id.btn_add);
-            tvViewMore = (TextView)itemView.findViewById(R.id.tv_viewmore);
+            btnAdd = (Button) itemView.findViewById(R.id.btn_add);
+            tvViewMore = (TextView) itemView.findViewById(R.id.tv_viewmore);
+            tvSectionName = (TextView) itemView.findViewById(R.id.section_text);
+            spaceView = itemView.findViewById(R.id.space);
 
         }
     }

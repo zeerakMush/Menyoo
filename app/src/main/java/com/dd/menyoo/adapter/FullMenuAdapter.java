@@ -16,12 +16,15 @@ import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Created by Administrator on 19-Feb-16.
  */
 public class FullMenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-    private ArrayList<CategoryModel> mDataList;
+    private HashMap<String,ArrayList<CategoryModel>>  mDataList;
+    private ArrayList<CategoryModel> mAllData;
+    private ArrayList<String> keys;
     private int mRowIndex = -1;
     Context mCtx;
     View.OnClickListener mClickListener;
@@ -32,11 +35,17 @@ public class FullMenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
     public FullMenuAdapter(Context ctx) {
         this.mCtx = ctx;
+        mAllData = new ArrayList<>();
     }
 
-    public void setData(ArrayList<CategoryModel> data) {
+    public void setData(HashMap<String,ArrayList<CategoryModel>> data,ArrayList<String> keys) {
         if (mDataList != data) {
             mDataList = data;
+            this.keys=keys;
+            for(String key:keys){
+                if(mDataList.containsKey(key))
+                mAllData.addAll(mDataList.get(key));
+            }
             notifyDataSetChanged();
         }
     }
@@ -52,11 +61,12 @@ public class FullMenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder rawHolder, final int position) {
         final ItemViewHolder holder = (ItemViewHolder) rawHolder;
-        holder.tvMenu.setText(mDataList.get(position).getName());
+        CategoryModel cm = mAllData.get(position);
+        holder.tvMenu.setText(cm.getName());
         holder.pb_wait.bringToFront();
-        if (!mDataList.get(position).getImageName().trim().isEmpty())
+        if (!cm.getImageName().trim().isEmpty())
             Picasso.with(mCtx)
-                    .load(mDataList.get(position).getImageName())
+                    .load(cm.getImageName())
                     .into(holder.ivMenu, new Callback() {
                         @Override
                         public void onSuccess() {
@@ -68,7 +78,7 @@ public class FullMenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
                         }
                     });
-        holder.ivMenu.setTag(mDataList.get(position));
+        holder.ivMenu.setTag(cm);
         if (mClickListener != null)
             holder.ivMenu.setOnClickListener(mClickListener);
         // holder.quickImageView.setImageResource(mDataList.get(position));
@@ -76,7 +86,7 @@ public class FullMenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
     @Override
     public int getItemCount() {
-        return mDataList.size();
+        return mAllData.size();
     }
 
     private class ItemViewHolder extends RecyclerView.ViewHolder {

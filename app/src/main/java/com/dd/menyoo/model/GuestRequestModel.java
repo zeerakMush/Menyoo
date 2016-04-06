@@ -5,16 +5,16 @@ package com.dd.menyoo.model;
  */
 public class GuestRequestModel extends BaseClassModel {
 
-    int TableNumber ;
+    String TableNumber ;
     int BillId ;
     String UserName;
     int RequestId;
 
-    public int getTableNumber() {
+    public String getTableNumber() {
         return TableNumber;
     }
 
-    public void setTableNumber(int tableNumber) {
+    public void setTableNumber(String tableNumber) {
         this.TableNumber = tableNumber;
     }
 
@@ -42,7 +42,7 @@ public class GuestRequestModel extends BaseClassModel {
         this.RequestId = requestId;
     }
 
-    public GuestRequestModel(int tableNumber, int billId, String hostName, int requestId) {
+    public GuestRequestModel(String tableNumber, int billId, String hostName, int requestId) {
         this.TableNumber = tableNumber;
         this.BillId = billId;
         this.UserName = hostName;

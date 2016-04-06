@@ -11,7 +11,7 @@ public interface ISignalRListener {
     void billUpdated(Object obj);
     void userWantToJoin(Object obj);
     void responseToJoin(Object obj);
-    void changeTable(int current);
+    void changeTable(String current);
     void joinRequestCancel();
     void restaurantActive(Object obj);
     void appDisable(Object obj);

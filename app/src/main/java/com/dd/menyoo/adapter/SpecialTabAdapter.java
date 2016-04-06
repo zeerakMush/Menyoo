@@ -79,24 +79,24 @@ public class SpecialTabAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             if (menuItem.getItemType() == MenuModel.type.Specail.getValue()) {
                 text = "Special Offers";
             } else if (menuItem.getItemType() == MenuModel.type.FirstTime.getValue()) {
-                text = "First Timer";
+                text = "First Time Offer";
+            } else if (menuItem.getItemType() == MenuModel.type.Poplar.getValue()) {
+                text = "Popular Dishes";
+            }
+            holder.llTopHeader.setVisibility(View.VISIBLE);
+            holder.tvTopHeader.setText(text);
+        } else if (mDataList.get(position - 1).isfirstTimeItem() && !menuItem.isfirstTimeItem()) {
+            String text = "";
+            if (menuItem.getItemType() == MenuModel.type.Specail.getValue()) {
+                text = "Specials";
             } else if (menuItem.getItemType() == MenuModel.type.Poplar.getValue()) {
                 text = "Popular Dishes";
             }
             holder.llTopHeader.setVisibility(View.VISIBLE);
             holder.tvTopHeader.setText(text);
         } else if (mDataList.get(position - 1).isSpecial() && !menuItem.isSpecial()) {
-            String text = "";
-            if (menuItem.getItemType() == MenuModel.type.FirstTime.getValue()) {
-                text = "First Timer";
-            } else if (menuItem.getItemType() == MenuModel.type.Poplar.getValue()) {
-                text = "Popular Dishes";
-            }
             holder.llTopHeader.setVisibility(View.VISIBLE);
-            holder.tvTopHeader.setText(text);
-        } else if (mDataList.get(position - 1).isPopular() && !menuItem.isPopular()) {
-            holder.llTopHeader.setVisibility(View.VISIBLE);
-            holder.tvTopHeader.setText("First Timer");
+            holder.tvTopHeader.setText("Popular Dishes");
         } else {
             holder.llTopHeader.setVisibility(View.GONE);
         }

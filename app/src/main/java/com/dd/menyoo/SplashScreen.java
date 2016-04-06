@@ -77,12 +77,18 @@ public class SplashScreen extends AppCompatActivity {
         try {
             JSONObject jsonObject = new JSONObject(obj.toString());
             if(jsonObject.get("state").equals("Success")){
-                boolean isUpdateRequired = jsonObject.getBoolean("isUpdateRequired");
-                if(!isUpdateRequired)
-                    toLoginActivity();
-                else{
-                    ivSplash.setVisibility(View.GONE);
-                }
+                final boolean isUpdateRequired = jsonObject.getBoolean("isUpdateRequired");
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        if(!isUpdateRequired)
+                            toLoginActivity();
+                        else{
+                            ivSplash.setVisibility(View.GONE);
+                        }
+                    }
+                },2000);
+
             }
 
 

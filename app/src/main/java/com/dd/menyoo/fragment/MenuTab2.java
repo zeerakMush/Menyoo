@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import com.dd.menyoo.R;
 import com.dd.menyoo.adapter.MenuTabAdapter2;
+import com.dd.menyoo.model.CategoryKeyModel;
 import com.dd.menyoo.model.CategoryModel;
 import com.dd.menyoo.model.MenuModel;
 import com.dd.menyoo.network.NetworkManagerOld;
@@ -25,7 +26,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
 
 
 public class MenuTab2 extends BaseFragment {
@@ -36,12 +39,13 @@ public class MenuTab2 extends BaseFragment {
     ArrayList<MenuModel> mMenuItemArray;
     MenuTabAdapter2 mtAdapter;
     CategoryModel categoryModel;
+    ArrayList<CategoryKeyModel> mKey;
+    HashMap<Integer,ArrayList<MenuModel>> mMapMenu;
 
 
     public MenuTab2() {
         // Required empty public constructor
     }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -62,7 +66,6 @@ public class MenuTab2 extends BaseFragment {
             tvCategoryMessage.setVisibility(View.VISIBLE);
             tvCategoryMessage.setText(categoryModel.getCategoryMessage());
         }
-
         setMenuTab2Adapter();getCategoriesItems(categoryModel.getCategoryId());
     }
 
@@ -70,7 +73,7 @@ public class MenuTab2 extends BaseFragment {
         mMenuItemArray = new ArrayList<>();
         mtAdapter = new MenuTabAdapter2(getActivity());
         rvMenuTab2.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
-        mtAdapter.setData(mMenuItemArray);
+       mtAdapter.setData(new HashMap<Integer, ArrayList<MenuModel>>(),new ArrayList<CategoryKeyModel>());
         rvMenuTab2.setAdapter(mtAdapter);
     }
 
@@ -93,7 +96,7 @@ public class MenuTab2 extends BaseFragment {
             public void onTaskCompletedSuccessfully(Object obj) {
                 // TODO Auto-generated method stub
                 Log.e("Menyoo",obj.toString());
-                afterGetCategoryItems(obj);
+                afterGetCategoryItemsNew(obj);
             }
         });
         String url =String.format("GetMenuForCategories?category=%d", categoryId);
@@ -102,7 +105,59 @@ public class MenuTab2 extends BaseFragment {
         httpMan.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, params);
     }
 
-    private void afterGetCategoryItems(Object obj){
+
+
+    private void afterGetCategoryItemsNew(Object object){
+        try {
+            pbMenu.setVisibility(View.GONE);
+            mKey = new ArrayList<>();
+            mMapMenu = new HashMap<>();
+            ArrayList<MenuModel> menuArray;
+            JSONArray jsonArr = new JSONArray(object.toString());
+            JSONArray categoryArr = jsonArr.getJSONArray(0);
+            CategoryKeyModel ckm;
+            for(int i=0;i<categoryArr.length();i++){
+                ckm = new CategoryKeyModel();
+                ckm.setCategoryName(categoryArr.getJSONObject(i).getString("Name"));
+                ckm.setKey(categoryArr.getJSONObject(i).getInt("MenuId"));
+                mKey.add(ckm);
+            }
+
+            for(int i=1;i<jsonArr.length();i++){
+                JSONArray innerJsonArray = jsonArr.getJSONArray(i);
+                menuArray = new ArrayList<>();
+                Integer key=0;
+                for(int j=0;j<innerJsonArray.length();j++){
+                    JSONObject jObj = innerJsonArray.getJSONObject(j);
+                    int id = jObj.getInt("MenuId");
+                    String name = jObj.getString("Name");
+                    String description = jObj.getString("Description");
+                    key = jObj.getInt("ParentId");
+                    double prize = jObj.getDouble("Price");
+                    boolean isExtraData=false;
+                    if(description.length()>140)
+                        isExtraData = true;
+                    MenuModel menuModel =new MenuModel(name,description,prize,id,isExtraData);
+                    for(CategoryKeyModel ckm2:mKey){
+                        if(ckm2.getKey().equals(key))
+                            menuModel.setCategoryName(ckm2.getCategoryName());
+                    }
+                    menuArray.add(menuModel);
+                }
+                mMapMenu.put(key,menuArray);
+            }
+            mtAdapter.setData(mMapMenu,mKey);
+            mtAdapter.notifyDataSetChanged();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void setCategory(CategoryModel cm) {
+        this.categoryModel = cm;
+    }
+
+    /*private void afterGetCategoryItems(Object obj){
         try {
             pbMenu.setVisibility(View.GONE);
             JSONArray jsonArr = new JSONArray(obj.toString());
@@ -117,14 +172,10 @@ public class MenuTab2 extends BaseFragment {
                     isExtraData = true;
                 mMenuItemArray.add(new MenuModel(name,description,prize,id,isExtraData));
             }
-            mtAdapter.setData(mMenuItemArray);
+            // mtAdapter.setData(mMenuItemArray);
             mtAdapter.notifyDataSetChanged();
         } catch (JSONException e) {
             e.printStackTrace();
         }
-    }
-
-    public void setCategory(CategoryModel cm) {
-        this.categoryModel = cm;
-    }
+    }*/
 }
