@@ -108,7 +108,9 @@ public class SignInActivity extends BaseClass {
                 String email = jsonObject.getString("Email");
                 String phoneNumber = jsonObject.getString("PhoneNumber");
                 String displayPicture = jsonObject.getString("DisplayPictureFile");
-                user = new UserModel(id, firstName, lastName, email, phoneNumber, displayPicture, isVerificationRequired);
+                /*int loyalityStamps = jsonObject.getInt("LoyalityStamps");*/
+                user = new UserModel(id, firstName, lastName, email, phoneNumber,
+                        displayPicture, isVerificationRequired/*, loyalityStamps*/);
                 AppController.setLoginUser(user);
                 sharedPreferences.SetUserIsLoggedIn(user);
                 if (!isVerificationRequired)

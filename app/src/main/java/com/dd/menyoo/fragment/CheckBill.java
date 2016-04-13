@@ -17,6 +17,7 @@ import com.dd.menyoo.R;
 import com.dd.menyoo.TabActivity;
 import com.dd.menyoo.adapter.CheckBillAdapter;
 import com.dd.menyoo.adapter.OrderAdapter;
+import com.dd.menyoo.model.CategoryExtra;
 import com.dd.menyoo.model.CheckBillModel;
 import com.dd.menyoo.model.OrderModel;
 
@@ -93,10 +94,17 @@ public class CheckBill extends BaseFragment {
 
         int tQuantity = 0;
         double subTotal = 0, gst = 0, tCost = 0, serviceCharge = 0;
-
+        double additionalPrice = 0.0;
 
         for (CheckBillModel i : chkArr) {
-            subTotal += i.getUnitPrice() * i.getQuantity();
+            if(i.getVaraints()!=null)
+            {   additionalPrice = 0.0;
+                for(CategoryExtra extra: i.getVaraints())
+                    additionalPrice += extra.getOptions().get(0).getPrice();
+                    /*additionalPrice +=price;*/
+                    /*orderItem.getMenu().setPrice(orderItem.getMenu().getPrice()+additionalPrice);*/
+            }
+            subTotal += (i.getUnitPrice() + additionalPrice)* i.getQuantity();
             tQuantity += i.getQuantity();
         }
         serviceCharge = subTotal*0.1;

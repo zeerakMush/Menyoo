@@ -2,6 +2,7 @@ package com.dd.menyoo.fragment;
 
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -9,9 +10,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -19,8 +25,13 @@ import com.dd.menyoo.R;
 import com.dd.menyoo.TabActivity;
 import com.dd.menyoo.common.AppController;
 import com.dd.menyoo.common.AppHelper;
+import com.dd.menyoo.model.CategoryExtra;
 import com.dd.menyoo.model.MenuModel;
+import com.dd.menyoo.model.Options;
 import com.dd.menyoo.model.OrderModel;
+
+import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -31,12 +42,17 @@ public class OrderPlacement extends BaseFragment implements View.OnClickListener
     public OrderPlacement() {
         // Required empty public constructor
     }
+
     MenuModel mMenuModel;
-    TextView mTitle,mPrice,mDescription,mQuantity,mTotalPrice,mViewMore;
-    Button mAddBTn,mSubBtn,mAddToBasket;
-    EditText mComment ;
+    TextView mTitle, mPrice, mDescription, mQuantity, mTotalPrice, mViewMore;
+    Button mAddBTn, mSubBtn, mAddToBasket;
+    LinearLayout llExtraData;
+    Spinner spinnerTop, spinnerBottom;
+    EditText mComment;
     int quantity;
-    double totalPrize,prize;
+    double totalPrize, prize;
+    ArrayList<Integer> mVaraitsID;
+    ArrayList<Double> mExtraPrice;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -48,16 +64,20 @@ public class OrderPlacement extends BaseFragment implements View.OnClickListener
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        mTitle = (TextView)view.findViewById(R.id.tv_title_menu);
-        mPrice = (TextView)view.findViewById(R.id.tv_price);
-        mQuantity = (TextView)view.findViewById(R.id.tv_quantity);
-        mDescription = (TextView)view.findViewById(R.id.tv_description);
-        mViewMore = (TextView)view.findViewById(R.id.tv_viewmore);
-        mTotalPrice = (TextView)view.findViewById(R.id.tv_total);
-        mAddBTn = (Button)view.findViewById(R.id.btn_add);
-        mSubBtn = (Button)view.findViewById(R.id.btn_sub);
+        mTitle = (TextView) view.findViewById(R.id.tv_title_menu);
+        mPrice = (TextView) view.findViewById(R.id.tv_price);
+        mQuantity = (TextView) view.findViewById(R.id.tv_quantity);
+        mDescription = (TextView) view.findViewById(R.id.tv_description);
+        mViewMore = (TextView) view.findViewById(R.id.tv_viewmore);
+        mTotalPrice = (TextView) view.findViewById(R.id.tv_total);
+        mAddBTn = (Button) view.findViewById(R.id.btn_add);
+        mSubBtn = (Button) view.findViewById(R.id.btn_sub);
+        llExtraData = (LinearLayout) view.findViewById(R.id.ll_extra_data);
+        /*spinnerTop = (Spinner)view.findViewById(R.id.spinner_top);
+        spinnerBottom = (Spinner)view.findViewById(R.id.spinner_bottom);*/
+
         mAddToBasket = (Button) view.findViewById(R.id.btn_addToBasket);
-        mComment = (EditText)view.findViewById(R.id.et_comment);
+        mComment = (EditText) view.findViewById(R.id.et_comment);
         mComment.addTextChangedListener(commentWatcher);
 
         ViewTreeObserver vto = mDescription.getViewTreeObserver();
@@ -69,20 +89,36 @@ public class OrderPlacement extends BaseFragment implements View.OnClickListener
                 }
             }
         });
-        setListeners();setFeilds();
+        setListeners();
+        setFeilds();
     }
 
-    private void setFeilds(){
-        if(mMenuModel!=null){
+    private void setFeilds() {
+        if (mMenuModel != null) {
             quantity = 1;
             totalPrize = mMenuModel.getPrice();
             prize = totalPrize;
             mTitle.setText(mMenuModel.getTitle());
-            mPrice.setText(String.format("RM %.2f",mMenuModel.getPrice()));
+            mPrice.setText(String.format("RM %.2f", mMenuModel.getPrice()));
             mDescription.setText(mMenuModel.getDescription());
-            mQuantity.setText(String.format("Quantity %d",quantity));
-            mTotalPrice.setText(String.format("RM %.2f",totalPrize));
+            mQuantity.setText(String.format("Quantity %d", quantity));
+            mTotalPrice.setText(String.format("RM %.2f", totalPrize));
 
+            if (mMenuModel.getVariants() != null && mMenuModel.getVariants().size() > 0) {
+                setSpinners(mMenuModel.getVariants());
+            }
+
+        }
+    }
+
+    public void setSpinners(ArrayList<CategoryExtra> extras) {
+        int i = 0;
+        mVaraitsID = new ArrayList<>();
+        mExtraPrice = new ArrayList<>();
+        for (CategoryExtra cExtra : extras) {
+            addSpinner(cExtra, i++);
+            mVaraitsID.add(0);
+            mExtraPrice.add(0.0);
         }
     }
 
@@ -90,7 +126,7 @@ public class OrderPlacement extends BaseFragment implements View.OnClickListener
         this.mMenuModel = mMenuModel;
     }
 
-    private void setListeners(){
+    private void setListeners() {
         mSubBtn.setOnClickListener(this);
         mAddToBasket.setOnClickListener(this);
         mAddBTn.setOnClickListener(this);
@@ -99,7 +135,7 @@ public class OrderPlacement extends BaseFragment implements View.OnClickListener
 
     @Override
     public void onClick(View view) {
-        switch (view.getId()){
+        switch (view.getId()) {
             case R.id.btn_add:
                 addItem();
                 break;
@@ -107,10 +143,10 @@ public class OrderPlacement extends BaseFragment implements View.OnClickListener
                 subItem();
                 break;
             case R.id.btn_addToBasket:
-                if(mMenuModel.isfirstTimeItem())
+                if (mMenuModel.isfirstTimeItem())
                     AppController.setIsFirstTimeOrderAdded(true);
 
-                ((TabActivity)getActivity()).addOrder(orderFactory());
+                ((TabActivity) getActivity()).addOrder(orderFactory());
                 break;
             case R.id.tv_viewmore:
                 mDescription.setMaxLines(Integer.MAX_VALUE);
@@ -121,31 +157,37 @@ public class OrderPlacement extends BaseFragment implements View.OnClickListener
     }
 
     private OrderModel orderFactory() {
-        return new OrderModel(mMenuModel,
-                mComment.getText().toString(),quantity);
+        OrderModel orderModel;
+        if (mVaraitsID != null && mVaraitsID.size() > 0)
+            orderModel = new OrderModel(mMenuModel,
+                    mComment.getText().toString(), quantity, mVaraitsID,mExtraPrice);
+        else
+            orderModel = new OrderModel(mMenuModel,
+                    mComment.getText().toString(), quantity);
+        return orderModel;
     }
 
-    private void addItem(){
-        if(!mMenuModel.isfirstTimeItem()){
-            quantity+=1;
-            totalPrize=prize*quantity;
-            mQuantity.setText(String.format("Quantity %d",quantity));
-            mTotalPrice.setText(String.format("RM %.2f",totalPrize));
-        }else{
-            Toast.makeText(getActivity(),"Only Single item is allowed",Toast.LENGTH_LONG).show();
+    private void addItem() {
+        if (!mMenuModel.isfirstTimeItem()) {
+            quantity += 1;
+            totalPrize = prize * quantity;
+            mQuantity.setText(String.format("Quantity %d", quantity));
+            mTotalPrice.setText(String.format("RM %.2f", totalPrize));
+        } else {
+            Toast.makeText(getActivity(), "Only Single item is allowed", Toast.LENGTH_LONG).show();
         }
     }
 
-    private void subItem(){
-        if(quantity>1){
-            quantity-=1;
-            totalPrize=prize*quantity;
-        }else{
-            quantity=1;
-            totalPrize=prize;
+    private void subItem() {
+        if (quantity > 1) {
+            quantity -= 1;
+            totalPrize = prize * quantity;
+        } else {
+            quantity = 1;
+            totalPrize = prize;
         }
-        mQuantity.setText(String.format("Quantity %d",quantity));
-        mTotalPrice.setText(String.format("RM %.2f",totalPrize));
+        mQuantity.setText(String.format("Quantity %d", quantity));
+        mTotalPrice.setText(String.format("RM %.2f", totalPrize));
 
     }
 
@@ -157,8 +199,8 @@ public class OrderPlacement extends BaseFragment implements View.OnClickListener
 
         @Override
         public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-            if(charSequence.toString().length()>99){
-                Toast.makeText(getActivity(),"Limit Reached",Toast.LENGTH_LONG).show();
+            if (charSequence.toString().length() > 99) {
+                Toast.makeText(getActivity(), "Limit Reached", Toast.LENGTH_LONG).show();
             }
         }
 
@@ -167,5 +209,63 @@ public class OrderPlacement extends BaseFragment implements View.OnClickListener
 
         }
     };
+
+    ///Spinner Varaint
+    public void addSpinner(final CategoryExtra extra, int position) {
+        final Spinner spinner = new Spinner(getActivity(), Spinner.MODE_DIALOG);
+        spinner.setPrompt(extra.getOptionName());
+        spinner.setTag(position);
+        LinearLayout.LayoutParams params;
+        llExtraData.setVisibility(View.VISIBLE);
+        params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, AppHelper.dpToPx(40, getActivity()));
+        llExtraData.addView(spinner, params);
+        addSpaceView(false);
+        addSpaceView(true);
+        String[] optionsArr = new String[extra.getOptions().size()];
+        int i = 0;
+        for (Options options : extra.getOptions()) {
+            optionsArr[i++] = options.getName();
+        }
+        ArrayAdapter<String> gameKindArray = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, optionsArr);
+        gameKindArray.setDropDownViewResource(android.R.layout.simple_list_item_single_choice);
+        spinner.setAdapter(gameKindArray);
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                if (mVaraitsID.size() > 0)
+                    mVaraitsID.set((Integer) spinner.getTag(), extra.getOptions().get(i).getID());
+                if (mExtraPrice.size() > 0)
+                    mExtraPrice.set((Integer) spinner.getTag(), extra.getOptions().get(i).getPrice());
+                updatePrce();
+                /*prize = mMenuModel.getPrice();
+                prize += extra.getOptions().get(i).getPrice();*/
+                /*addItem();subItem();*/
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+    }
+
+    public void addSpaceView(boolean isToAddMargin) {
+        View view = new View(getActivity());
+        LinearLayout.LayoutParams params;
+        view.setBackgroundColor(getActivity().getResources().getColor(R.color.white));
+        params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, AppHelper.dpToPx(1, getActivity()));
+        if (isToAddMargin)
+            params.topMargin = AppHelper.dpToPx(10, getActivity());
+        llExtraData.addView(view, params);
+    }
+
+    public void updatePrce() {
+        prize = mMenuModel.getPrice();
+        for (Double price : mExtraPrice) {
+            this.prize += price;
+        }
+        addItem();
+        subItem();
+    }
 
 }

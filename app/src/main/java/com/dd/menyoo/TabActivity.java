@@ -42,8 +42,10 @@ import com.dd.menyoo.fragment.MenuTab1;
 import com.dd.menyoo.fragment.SpecialMenu;
 import com.dd.menyoo.listeners.ICallBack;
 import com.dd.menyoo.listeners.ISignalRListener;
+import com.dd.menyoo.model.CategoryExtra;
 import com.dd.menyoo.model.CheckBillModel;
 import com.dd.menyoo.model.GuestRequestModel;
+import com.dd.menyoo.model.Options;
 import com.dd.menyoo.model.OrderModel;
 import com.dd.menyoo.model.RestaurantModel;
 import com.dd.menyoo.network.NetworkManagerOld;
@@ -76,6 +78,11 @@ public class TabActivity extends BaseClass implements ISignalRListener {
     private static final String GET_BILL_ID = "GetBillID" +
             AppController.getCurrentRestaurent().getRestaurantID();
     private static final String GET_RES_ID = "GetResId";
+
+    public int specailPositioToScroll = 0;
+    public int categoryPositionToScroll = 0;
+    public int menuItemPositionToScroll = 0;
+    public boolean isToScroll = false;
 
     private TextView mTvRestaurantName, mTvTableCode, mBasketCount, mBannerText;
     private ImageButton mHome, mBack;
@@ -340,6 +347,7 @@ public class TabActivity extends BaseClass implements ISignalRListener {
     @Override
     public void onBackPressed() {
         getFragmentManager().popBackStack();
+        isToScroll = true;
         if (getFragmentManager().getBackStackEntryCount() == 0) {
             toRestaurants();
         }
@@ -366,6 +374,7 @@ public class TabActivity extends BaseClass implements ISignalRListener {
 
     public void backButton(View view) {
         getFragmentManager().popBackStack();
+        isToScroll = true;
         if (getFragmentManager().getBackStackEntryCount() == 0) {
             toRestaurants();
         }
@@ -378,7 +387,15 @@ public class TabActivity extends BaseClass implements ISignalRListener {
      **/
 
     public void addOrder(OrderModel order) {
-        String key = order.getComment() + order.getMenu().getItemID();
+        String key;
+        if(order.getExtraId()!=null){
+             int idSum =0 ;
+            for(Integer i : order.getExtraId())
+                idSum +=i;
+            key = order.getComment()+order.getMenu().getItemID()+ idSum;
+        }
+        else
+            key = order.getComment() + order.getMenu().getItemID();
         if (!mOrdersMap.containsKey(key)) {
             mOrdersMap.put(key, order);
             mOrderKey.add(key);
@@ -1099,9 +1116,9 @@ public class TabActivity extends BaseClass implements ISignalRListener {
     public void afterCheckBill(Object obj) {
         try {
             JSONArray jsonArr = new JSONArray(obj.toString());
-            bufferBilledItem = new ArrayList<>();
+           /* bufferBilledItem = new ArrayList<>();
             if (billArr.size() > 0)
-                bufferBilledItem.addAll(billArr);
+                bufferBilledItem.addAll(billArr);*/
             billArr = new ArrayList<>();
             for (int i = 0; i < jsonArr.length(); i++) {
                 JSONObject jObj = jsonArr.getJSONObject(i);
@@ -1113,10 +1130,13 @@ public class TabActivity extends BaseClass implements ISignalRListener {
                 String itemCode = jObj.getString("ItemCode");
                 String itemName = jObj.getString("ItemName");
                 String ItemComments = jObj.getString("ItemComments");
+                String acceptedTime = jObj.getString("CreateTime");
+                ArrayList<CategoryExtra> variants= getExtraOptionData(jObj.getJSONArray("Extras"));
+                acceptedTime =  AppHelper.getDateTimeForAcceptedTime(acceptedTime);
                 double unitPrice = jObj.getDouble("UnitPrice");
                 Integer orderRequestState = jObj.getInt("OrderRequestStateId");
                 billArr.add(new CheckBillModel(itemState, userNAme, orderId, itemId, itemQuantity, itemCode
-                        , itemName, ItemComments, unitPrice, orderRequestState));
+                        , itemName, ItemComments, unitPrice, orderRequestState,acceptedTime,variants));
             }
             updateBasketFragment();
             //generateItemStateChangeNoti();
@@ -1128,6 +1148,24 @@ public class TabActivity extends BaseClass implements ISignalRListener {
 
         } catch (JSONException e) {
             e.printStackTrace();
+        }
+    }
+
+    public ArrayList<CategoryExtra> getExtraOptionData(JSONArray extras){
+        try {
+            ArrayList<CategoryExtra> categoryExtras = new ArrayList<>();
+            for(int i=0;i<extras.length();i++){
+                String optionName = extras.getJSONObject(i).getString("Option");
+                double price = extras.getJSONObject(i).getDouble("Price");
+                Options option = new Options(optionName,price);
+                ArrayList<Options> optionses = new ArrayList<>();
+                optionses.add(option);
+                categoryExtras.add(new CategoryExtra("",optionses));
+            }
+            return categoryExtras;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return  null;
         }
     }
 
@@ -1224,7 +1262,7 @@ public class TabActivity extends BaseClass implements ISignalRListener {
 
     //endregion
 
-    //region ssaving data
+    //region saving data
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
         super.onSaveInstanceState(savedInstanceState);
@@ -1241,6 +1279,18 @@ public class TabActivity extends BaseClass implements ISignalRListener {
         AppController.setBillId(savedInstanceState.getInt("BillID"));
     }
     //endregion
+
+    public void showSpecialDialog(String desc) {
+        TextView myMsg = new TextView(this);
+        myMsg.setText(desc);
+        myMsg.setPadding(40, 40, 40, 40);
+        myMsg.setGravity(Gravity.CENTER_HORIZONTAL);
+
+        AlertDialog dialog = new AlertDialog.Builder(TabActivity.this)
+                .setView(myMsg)
+                .show();
+
+    }
 
 }
 

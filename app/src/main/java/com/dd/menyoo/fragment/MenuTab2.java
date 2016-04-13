@@ -3,6 +3,7 @@ package com.dd.menyoo.fragment;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v7.view.menu.ExpandedMenuView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -14,9 +15,11 @@ import android.widget.TextView;
 
 import com.dd.menyoo.R;
 import com.dd.menyoo.adapter.MenuTabAdapter2;
+import com.dd.menyoo.model.CategoryExtra;
 import com.dd.menyoo.model.CategoryKeyModel;
 import com.dd.menyoo.model.CategoryModel;
 import com.dd.menyoo.model.MenuModel;
+import com.dd.menyoo.model.Options;
 import com.dd.menyoo.network.NetworkManagerOld;
 import com.dd.menyoo.network.TaskCompleted;
 
@@ -73,7 +76,7 @@ public class MenuTab2 extends BaseFragment {
         mMenuItemArray = new ArrayList<>();
         mtAdapter = new MenuTabAdapter2(getActivity());
         rvMenuTab2.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
-       mtAdapter.setData(new HashMap<Integer, ArrayList<MenuModel>>(),new ArrayList<CategoryKeyModel>());
+        mtAdapter.setData(new HashMap<Integer, ArrayList<MenuModel>>(),new ArrayList<CategoryKeyModel>());
         rvMenuTab2.setAdapter(mtAdapter);
     }
 
@@ -134,10 +137,11 @@ public class MenuTab2 extends BaseFragment {
                     String description = jObj.getString("Description");
                     key = jObj.getInt("ParentId");
                     double prize = jObj.getDouble("Price");
+                    ArrayList<CategoryExtra> variants= getExtraOptionData(jObj.getJSONArray("Extras"));
                     boolean isExtraData=false;
-                    if(description.length()>140)
+                    if(description.length()>170)
                         isExtraData = true;
-                    MenuModel menuModel =new MenuModel(name,description,prize,id,isExtraData);
+                    MenuModel menuModel =new MenuModel(name,description,prize,id,isExtraData,variants);
                     for(CategoryKeyModel ckm2:mKey){
                         if(ckm2.getKey().equals(key))
                             menuModel.setCategoryName(ckm2.getCategoryName());
@@ -155,6 +159,31 @@ public class MenuTab2 extends BaseFragment {
 
     public void setCategory(CategoryModel cm) {
         this.categoryModel = cm;
+    }
+
+    public ArrayList<CategoryExtra> getExtraOptionData(JSONArray extras){
+        try {
+            ArrayList<CategoryExtra> categoryExtras = new ArrayList<>();
+            for(int i=0;i<extras.length();i++){
+                String optionName = "";
+                ArrayList<Options> options ;
+                JSONObject jExtra = extras.getJSONObject(i);
+                optionName = jExtra.getString("OptionName");
+                options = new ArrayList<>();
+                JSONArray jOptionName = jExtra.getJSONArray("Options");
+                for(int j=0;j<jOptionName.length();j++){
+                    String name = jOptionName.getJSONObject(j).getString("option");
+                    double price =jOptionName.getJSONObject(j).getDouble("price");
+                    int id = jOptionName.getJSONObject(j).getInt("optionId");
+                    options.add(new Options(name,price,id));
+                }
+                categoryExtras.add(new CategoryExtra(optionName,options));
+            }
+            return categoryExtras;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return  null;
+        }
     }
 
     /*private void afterGetCategoryItems(Object obj){

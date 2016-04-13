@@ -78,7 +78,14 @@ public class OrderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
         String orderName = String.format("x%d %s", orderItem.getQuantity(), orderItem.getMenu().getTitle());
         holder.tvTitle.setText(orderName);
-        holder.tvPrice.setText(String.format("RM %.2f", orderItem.getMenu().getPrice() * orderItem.getQuantity()));
+        double additionalPrice = 0.0;
+        if(orderItem.getExtraId()!=null)
+        {
+            for(Double price: orderItem.getExtraPrice())
+                additionalPrice +=price;
+                    /*orderItem.getMenu().setPrice(orderItem.getMenu().getPrice()+additionalPrice);*/
+        }
+        holder.tvPrice.setText(String.format("RM %.2f", (orderItem.getMenu().getPrice()+additionalPrice) * orderItem.getQuantity()));
         holder.btnDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

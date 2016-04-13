@@ -2,6 +2,8 @@ package com.dd.menyoo.model;
 
 import android.view.Menu;
 
+import java.util.ArrayList;
+
 /**
  * Created by Administrator on 24-Feb-16.
  */
@@ -9,6 +11,8 @@ public class OrderModel extends BaseClassModel{
     MenuModel menu;
     String comment;
     int quantity;
+    ArrayList<Integer> extraId;
+    ArrayList<Double> extraPrice;
 
     public MenuModel getMenu() {
         return menu;
@@ -38,9 +42,25 @@ public class OrderModel extends BaseClassModel{
         this.quantity+=addQuantity;
     }
 
+    public ArrayList<Integer> getExtraId() {
+        return extraId;
+    }
+
+    public ArrayList<Double> getExtraPrice() {
+        return extraPrice;
+    }
+
     public OrderModel(MenuModel menu, String comment, int quantity) {
         this.menu = menu;
         this.comment = comment;
         this.quantity = quantity;
+    }
+
+    public OrderModel(MenuModel menu, String comment, int quantity, ArrayList<Integer> extraId, ArrayList<Double> extraPrice) {
+        this.menu = menu;
+        this.comment = comment;
+        this.quantity = quantity;
+        this.extraId = extraId;
+        this.extraPrice = extraPrice;
     }
 }

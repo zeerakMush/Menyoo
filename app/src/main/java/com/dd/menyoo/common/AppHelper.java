@@ -8,17 +8,20 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.media.RingtoneManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.v4.app.NotificationCompat;
 import android.support.v7.app.AlertDialog;
 import android.text.Html;
 import android.text.Layout;
 import android.text.TextUtils;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -108,7 +111,7 @@ public class AppHelper {
         results = results.substring(0, results.length() - 2);
         long time = Long.parseLong(results);
         Date date = new Date(time);
-        SimpleDateFormat sdf = new SimpleDateFormat("dd MMMM,yyyy HH:mm:ss");
+        SimpleDateFormat sdf = new SimpleDateFormat("dd MMMM,yyyy  HH:mm:ss");
         Calendar cal = Calendar.getInstance();
         TimeZone tz = cal.getTimeZone();
         Log.d("Time zone: ", tz.getDisplayName());
@@ -116,6 +119,44 @@ public class AppHelper {
         // SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yy");
         return sdf.format(date);
     }
+
+    public static String getDateTimeForAcceptedTime(String dateobj) {
+        if(dateobj.contains("Date")){
+            String d = /* "/Date(1418346257000+0700)/" */dateobj;
+            String results = d.replaceAll("^/Date\\(", "");
+            results = results.substring(0, results.length() - 2);
+            long time = Long.parseLong(results);
+            Date date = new Date(time);//05/04/16 @ 4:55PM
+            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yy @ hh:mm a");
+            Calendar cal = Calendar.getInstance();
+            TimeZone tz = cal.getTimeZone();
+            Log.d("Time zone: ", tz.getDisplayName());
+            sdf.setTimeZone(tz);
+            // SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yy");
+            return sdf.format(date);
+        }else{
+            String time2,date2;
+            if (dateobj != null) {
+                try {
+                    dateobj = dateobj.replace("T"," ");
+                    final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+                    final Date dateObj = sdf.parse(dateobj);
+                    //System.out.println(dateObj);
+                    SimpleDateFormat returnTime = new SimpleDateFormat("dd/MM/yy @ hh:mm a");
+                    String timepm = returnTime.format(dateObj);
+                    //String str = date2+" "+ timepm.replace("AM", "am").replace("PM", "pm");
+                    return timepm;
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    return "";
+                }
+            }
+            return "";
+        }
+
+    }
+
+
 
     public static void showConnectionAlert(Context ctx) {
         TextView myMsg = new TextView(ctx);
@@ -263,7 +304,34 @@ public class AppHelper {
         }
         return result;
     }
+    public static void buildAlertMessageNoInternet(final Context ctx) {
+        final android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(ctx);
+        builder.setMessage("Your Internet seems to be disabled, do you want to enable it?")
+                .setCancelable(false)
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    public void onClick(@SuppressWarnings("unused") final DialogInterface dialog, @SuppressWarnings("unused") final int id) {
+                        ctx.startActivity(new Intent(Settings.ACTION_WIFI_SETTINGS));
+                        dialog.dismiss();
+                    }
+                })
+                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    public void onClick(final DialogInterface dialog, @SuppressWarnings("unused") final int id) {
+                        dialog.cancel();
+                    }
+                }).show();
+        /*final AlertDialog alert = builder.create();
+        alert.show();*/
+    }
 
+    public static int dpToPx(int dp,Context ctx){
+        Resources r = ctx.getResources();
+        int px = (int) TypedValue.applyDimension(
+                TypedValue.COMPLEX_UNIT_DIP,
+                dp,
+                r.getDisplayMetrics()
+        );
+        return px;
+    }
 
 }
 

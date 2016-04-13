@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Html;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -45,6 +46,9 @@ public class ForgetPassword extends AppCompatActivity {
         etNewPwd = (EditText) findViewById(R.id.et_new_password);
         tvVerficationInstruction = (TextView) findViewById(R.id.tv_verification_txt);
         btnSend = (Button) findViewById(R.id.btn_change_pwd);
+        etNewPwd.setHint(Html.fromHtml("<font size=\"16\">" +
+                "New Password*     " + "</font>" + "<small>" +
+                "(min 6 characters)" + "</small>" ));
     }
 
     private void checkEmail(String email) {

@@ -89,7 +89,7 @@
                 android:maxLines="2"
                 android:textStyle="bold"
                 android:textSize="17sp"
-                android:text="Special Chinnes New Year Offer"
+                android:text="Special Chinnes New "
                 android:ellipsize="end"
                 />
             <RelativeLayout
@@ -125,17 +125,35 @@
                     />
 
             </RelativeLayout>
-            <TextView
-                android:id="@+id/tv_description"
-                android:layout_below="@id/tv_title_menu"
-                android:layout_above="@id/rl_btn"
+            <FrameLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:maxLines="6"
-                android:textSize="13sp"
-                android:text="MArinated Friedddddddddd Chicken MArinated MArinated Fried Chicken MArinated Fried Chicken MArinated Fried Chicken MArinated Fried Chicken MArinated Fried Chicken MArinated Fried Chicken "
-                android:ellipsize="end"
-                />
+                android:layout_below="@id/tv_title_menu"
+                >
+                <TextView
+                    android:id="@+id/tv_description"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:maxLines="5"
+                    android:textSize="13sp"
+                    android:text="@string/dummy_text"
+                    android:ellipsize="end"
+                    />
+                <TextView
+                    android:id="@+id/tv_viewmore"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingRight="10dp"
+                    android:paddingLeft="10dp"
+                    android:layout_gravity="end|bottom"
+                    android:textStyle=""
+                    android:visibility="visible"
+                    android:textColor="@drawable/btn_color"
+                    android:background="@color/black"
+                    android:text="@string/view_more"/>
+            </FrameLayout>
+
+
 
 
         </RelativeLayout>

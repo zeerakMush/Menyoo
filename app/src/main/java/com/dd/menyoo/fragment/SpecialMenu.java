@@ -9,6 +9,7 @@ import android.graphics.Point;
 import android.graphics.Rect;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -22,6 +23,7 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 
 import com.dd.menyoo.R;
+import com.dd.menyoo.TabActivity;
 import com.dd.menyoo.adapter.RestaurantAdapter;
 import com.dd.menyoo.adapter.SpecialTabAdapter;
 import com.dd.menyoo.common.AppController;
@@ -80,10 +82,13 @@ public class SpecialMenu extends BaseFragment {
     }
 
     SpecialTabAdapter scAdapter;
+    LinearLayoutManager llmSpecails;
+
     public void setAdapter(){
         mSpecailMenuArray = new ArrayList<>();
         scAdapter = new SpecialTabAdapter(getActivity(),this);
-        mRvSpecialTab.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
+        llmSpecails = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
+        mRvSpecialTab.setLayoutManager(llmSpecails);
         scAdapter.setData(mSpecailMenuArray);
         mRvSpecialTab.setAdapter(scAdapter);
     }
@@ -129,6 +134,9 @@ public class SpecialMenu extends BaseFragment {
                 boolean isSpecial =jObj.getBoolean("IsSpecial");
                 boolean isPopular = jObj.getBoolean("IsPopular");
                 boolean isFirstTime =  jObj.getBoolean("IsFirstTimer");
+                boolean isExtraData=false;
+                if(description.length()>140)
+                    isExtraData = true;
                 String discount;
                 if(isSpecial)
                      discount= jObj.getString("SpecialOfferOverlayText");
@@ -137,12 +145,22 @@ public class SpecialMenu extends BaseFragment {
                 String imageNAme = jObj.getString("SpecialDisplayPictureFile");
                 if((!AppController.isFirstTimeOrderAdded()&&isFirstTime)||isSpecial||isPopular)
                 mSpecailMenuArray.add(new MenuModel(name,description,
-                        imageNAme,prize,id,isSpecial,discount,isPopular,isFirstTime));
+                        imageNAme,prize,id,isSpecial,discount,isPopular,isFirstTime,isExtraData));
             }
             pbWait.setVisibility(View.GONE);
             Collections.reverse(mSpecailMenuArray);
             scAdapter.setData(mSpecailMenuArray);
             scAdapter.notifyDataSetChanged();
+            /*final int positionToScroll = ((TabActivity)getActivity()).specailPositioToScroll;
+            if(positionToScroll<mSpecailMenuArray.size())
+                  new Handler().postDelayed(new Runnable() {
+                      @Override
+                      public void run() {
+                          llmSpecails.smoothScrollToPosition(mRvSpecialTab,null,positionToScroll);
+                      }
+                  },500);*/
+
+            //llmSpecails.scrollToPosition();
 
         } catch (JSONException e) {
             e.printStackTrace();

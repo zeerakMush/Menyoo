@@ -12,6 +12,7 @@ public class UserModel {
     String displayPicturePAth;
     boolean isGuest;
     boolean isVerificationRequired;
+    int loyalityPoints;
 
     public UserModel(int userId, String firstName, String lastName,
                      String emailAddress, String phoneNumber, String displayPicturePAth,boolean isVerificationRequired) {
@@ -24,6 +25,20 @@ public class UserModel {
         this.isGuest = false;
         this.isVerificationRequired = isVerificationRequired;
     }
+
+    public UserModel(int userId, String firstName, String lastName,
+                     String emailAddress, String phoneNumber, String displayPicturePAth
+                    , boolean isVerificationRequired, int loyalityPoints) {
+        this.userId = userId;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.emailAddress = emailAddress;
+        this.phoneNumber = phoneNumber;
+        this.displayPicturePAth = displayPicturePAth;
+        this.isVerificationRequired = isVerificationRequired;
+        this.loyalityPoints = loyalityPoints;
+    }
+
     public UserModel(){
 
     }
@@ -74,6 +89,10 @@ public class UserModel {
 
     public void setDisplayPicturePAth(String displayPicturePAth) {
         this.displayPicturePAth = displayPicturePAth;
+    }
+
+    public int getLoyalityPoints() {
+        return loyalityPoints;
     }
 
     public boolean isGuest() {

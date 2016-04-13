@@ -26,6 +26,7 @@ import java.util.Objects;
 
 public class SplashScreen extends AppCompatActivity {
     ImageView ivSplash;
+    int count=0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,7 +43,10 @@ public class SplashScreen extends AppCompatActivity {
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
         }
-        checkUpdate(version);
+        if(AppHelper.isNetworkAvailable(this))
+            checkUpdate(version);
+        else
+            AppHelper.buildAlertMessageNoInternet(this);
     }
 
     protected void checkUpdate(String versionNumber) {
@@ -56,7 +60,7 @@ public class SplashScreen extends AppCompatActivity {
             public void onTaskFailed() {
                 // TODO Auto-generated method stub
                 Log.e("Menyoo", "Some Error");
-                AppHelper.showConnectionAlert(getApplicationContext());
+                AppHelper.showConnectionAlert(SplashScreen.this);
 
                 // / afterCatlogUpdate(null);
             }
@@ -115,5 +119,11 @@ public class SplashScreen extends AppCompatActivity {
         } catch (android.content.ActivityNotFoundException anfe) {
             startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + appPackageName)));
         }
+    }
+
+    public void bypassUpdate(View view) {
+        count++;
+        if(count==5)
+            toLoginActivity();
     }
 }

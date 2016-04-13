@@ -13,6 +13,8 @@ public class RestaurantModel {
     private String isCommingSoonMessage;
     private String feedbackEmail;
     private boolean isReadOnly;
+    private String loyalityDetails;
+    private String loyalityRequirements;
 
     public int getRestaurantID() {
         return restaurantID;
@@ -60,7 +62,8 @@ public class RestaurantModel {
         this.imageUrl = imageUrl;
     }
 
-    public RestaurantModel(int restaurantID, String restaurantName, String imageUrl, boolean isTableOccupied,boolean isRestaurantActive) {
+    public RestaurantModel(int restaurantID, String restaurantName,
+                           String imageUrl, boolean isTableOccupied,boolean isRestaurantActive) {
         this.restaurantID = restaurantID;
         this.restaurantName = restaurantName;
         this.imageUrl = imageUrl;
@@ -70,7 +73,9 @@ public class RestaurantModel {
 
 
 
-    public RestaurantModel(int restaurantID, String restaurantName, String imageUrl, boolean isTableOccupied, boolean isRestaurantActive, boolean isCommingSoon, String isCommingSoonMessage) {
+    public RestaurantModel(int restaurantID, String restaurantName,
+                           String imageUrl, boolean isTableOccupied, boolean isRestaurantActive,
+                           boolean isCommingSoon, String isCommingSoonMessage) {
         this.restaurantID = restaurantID;
         this.restaurantName = restaurantName;
         this.imageUrl = imageUrl;
@@ -89,6 +94,21 @@ public class RestaurantModel {
         this.isTableOccupied = isTableOccupied;
         this.isRestaurantActive = isRestaurantActive;
         this.feedbackEmail = feedbackEmail;
+        this.isReadOnly = isReadOnly;
+    }
+
+    public RestaurantModel(int restaurantID, String restaurantName,
+                           String imageUrl, boolean isTableOccupied,
+                           boolean isRestaurantActive, String feedbackEmail,
+                           String loyalityRequirements, String loyalityDetails, boolean isReadOnly) {
+        this.restaurantID = restaurantID;
+        this.restaurantName = restaurantName;
+        this.imageUrl = imageUrl;
+        this.isTableOccupied = isTableOccupied;
+        this.isRestaurantActive = isRestaurantActive;
+        this.feedbackEmail = feedbackEmail;
+        this.loyalityRequirements = loyalityRequirements;
+        this.loyalityDetails = loyalityDetails;
         this.isReadOnly = isReadOnly;
     }
 
@@ -114,5 +134,13 @@ public class RestaurantModel {
 
     public boolean isReadOnly() {
         return isReadOnly;
+    }
+
+    public String getLoyalityDetails() {
+        return loyalityDetails;
+    }
+
+    public String getLoyalityRequirements() {
+        return loyalityRequirements;
     }
 }

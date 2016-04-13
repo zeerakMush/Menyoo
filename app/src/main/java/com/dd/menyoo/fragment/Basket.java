@@ -54,7 +54,7 @@ public class Basket extends BaseFragment implements View.OnClickListener {
 
     HashMap<String, OrderModel> mHashMapOrder;
     ArrayList<String> mKeys;
-    Button btnSubmit, btnCheckBill,mEdit,mGtoMenu;
+    Button btnSubmit, btnCheckBill, mEdit, mGtoMenu;
     RecyclerView mRvOrder;
     ArrayList<OrderModelForPost> mOrderModelPost;
     TextView mTQuantity, mTCost, mNoOrder;
@@ -81,10 +81,13 @@ public class Basket extends BaseFragment implements View.OnClickListener {
         mTQuantity = (TextView) view.findViewById(R.id.tv_total_quantity);
         mNoOrder = (TextView) view.findViewById(R.id.tv_noorder);
         btnSubmit = (Button) view.findViewById(R.id.btn_submit);
-        mGtoMenu = (Button)view.findViewById(R.id.btn_gto_menu);
-        mEdit = (Button)view.findViewById(R.id.btn_edit);mEdit.setOnClickListener(this);
-        btnSubmit.setOnClickListener(this);mGtoMenu.setOnClickListener(this);
-        btnCheckBill = (Button) view.findViewById(R.id.btn_check_bill);btnCheckBill.setOnClickListener(this);
+        mGtoMenu = (Button) view.findViewById(R.id.btn_gto_menu);
+        mEdit = (Button) view.findViewById(R.id.btn_edit);
+        mEdit.setOnClickListener(this);
+        btnSubmit.setOnClickListener(this);
+        mGtoMenu.setOnClickListener(this);
+        btnCheckBill = (Button) view.findViewById(R.id.btn_check_bill);
+        btnCheckBill.setOnClickListener(this);
         mOrderModelPost = new ArrayList<>();
         dialogText = "";
         setAdapter();
@@ -92,7 +95,7 @@ public class Basket extends BaseFragment implements View.OnClickListener {
     }
 
     public void setAdapter() {
-        orderAdapter = new OrderAdapter(getActivity(),this);
+        orderAdapter = new OrderAdapter(getActivity(), this);
         mRvOrder.setLayoutManager(new LinearLayoutManager(getActivity(),
                 LinearLayoutManager.VERTICAL, false));
         orderAdapter.setData(mHashMapOrder, mKeys);
@@ -110,6 +113,8 @@ public class Basket extends BaseFragment implements View.OnClickListener {
             op.setItemQuaintity(orderItem.getQuantity());
             op.setUnitPrice(orderItem.getMenu().getPrice());
             op.setItemComments(orderItem.getComment());
+            if (orderItem.getExtraId() != null)
+                op.setVaraintIds(orderItem.getExtraId());
             mOrderModelPost.add(op);
         }
     }
@@ -123,8 +128,8 @@ public class Basket extends BaseFragment implements View.OnClickListener {
         }*/
 
         if (mHashMapOrder.size() == 0) {
-            if(dialogText.length()>1)
-                ((TabActivity)getActivity()).showGenricDialog(getActivity(), dialogText, "Ok", "Check Bill", new DialogInterface.OnClickListener() {
+            if (dialogText.length() > 1)
+                ((TabActivity) getActivity()).showGenricDialog(getActivity(), dialogText, "Ok", "Check Bill", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         dialogInterface.dismiss();
@@ -153,9 +158,16 @@ public class Basket extends BaseFragment implements View.OnClickListener {
         } else {
             double tCost = 0;
             int tQuantity = 0;
+            double additionalPrice = 0;
             for (String i : mKeys) {
                 OrderModel orderItem = mHashMapOrder.get(i);
-                tCost += orderItem.getMenu().getPrice() * orderItem.getQuantity();
+                if(orderItem.getExtraId()!=null)
+                {   additionalPrice = 0.0;
+                    for(Double price: orderItem.getExtraPrice())
+                        additionalPrice +=price;
+                    /*orderItem.getMenu().setPrice(orderItem.getMenu().getPrice()+additionalPrice);*/
+                }
+                tCost += (orderItem.getMenu().getPrice()+additionalPrice) * orderItem.getQuantity();
                 tQuantity += orderItem.getQuantity();
             }
             mTQuantity.setText(String.format("T.Quantity: %d", tQuantity));
@@ -163,8 +175,8 @@ public class Basket extends BaseFragment implements View.OnClickListener {
         }
     }
 
-    public void gtoMenu(){
-        ((TabActivity)getActivity()).replaceFragment(new MenuTab1(),true);
+    public void gtoMenu() {
+        ((TabActivity) getActivity()).replaceFragment(new MenuTab1(), true);
     }
 
     public void setmHashMapOrder(HashMap<String, OrderModel> mHashMapOrder, ArrayList<String> keys) {
@@ -173,7 +185,7 @@ public class Basket extends BaseFragment implements View.OnClickListener {
     }
 
     protected void sendOrder() {
-        AppHelper.getInstance().showProgressDialog("Order submitting",getActivity());
+        AppHelper.getInstance().showProgressDialog("Order submitting", getActivity());
         List<NameValuePair> nameValuePairs = new ArrayList<>(
                 2);
         nameValuePairs.add(new BasicNameValuePair("item",
@@ -210,15 +222,15 @@ public class Basket extends BaseFragment implements View.OnClickListener {
                         "Order Submitted Successfully", Snackbar.LENGTH_LONG)
                         .setActionTextColor(Color.RED)
                         .show();
-                ((TabActivity)getActivity()).setOrderSubmitted(true);
+                ((TabActivity) getActivity()).setOrderSubmitted(true);
                 /*btnCheckBill.setEnabled(true);*/
-                ((TabActivity)getActivity()).checkBill();
+                ((TabActivity) getActivity()).checkBill();
                 ((TabActivity) getActivity()).clearOrder();
                 setmHashMapOrder(new HashMap<String, OrderModel>(), new ArrayList<String>());
                 //setViews();
                 dialogText = "Your order has been submitted.";
                 setAdapter();
-            }else{
+            } else {
                 dialogText = "Your order has not been submitted.";
             }
         } catch (JSONException e) {
@@ -240,7 +252,7 @@ public class Basket extends BaseFragment implements View.OnClickListener {
             JSONArray jsonArray = new JSONArray(jsonArr);
             obj.accumulate("UserId", AppController.getLoginUser().getUserId());
             obj.accumulate("BillId", AppController.getBillId());
-            obj.accumulate("OrderDetails", jsonArray);
+            obj.accumulate("OrderDetails", getJsonArrayForItemsDetails(mOrderModelPost));
             Log.e("JsonObj", obj.toString());
             return obj;
         } catch (JSONException e) {
@@ -249,6 +261,45 @@ public class Basket extends BaseFragment implements View.OnClickListener {
             return null;
         }
     }
+
+    public JSONArray getJsonArrayForItemsDetails(ArrayList<OrderModelForPost> mOrderModelPost) {
+        try {
+            JSONArray jsonArray = new JSONArray();
+            for (int i = 0; i < mOrderModelPost.size(); i++) {
+                JSONObject jsonObject = new JSONObject();
+                jsonObject.put("ItemComments", mOrderModelPost.get(i).getItemComments());
+                jsonObject.put("ItemId", mOrderModelPost.get(i).getItemId());
+                jsonObject.put("ItemQuaintity", mOrderModelPost.get(i).getItemQuaintity());
+                jsonObject.put("UnitPrice", mOrderModelPost.get(i).getUnitPrice());
+                if (mOrderModelPost.get(i).getVaraintIds() != null &&
+                        mOrderModelPost.get(i).getVaraintIds().size() > 0)
+                    jsonObject.put("optionids", getJSonArrayForVaraintsID(mOrderModelPost.get(i).getVaraintIds()));
+                jsonArray.put(jsonObject);
+            }
+            return jsonArray;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new JSONArray();
+        }
+    }
+
+    private JSONArray getJSonArrayForVaraintsID(ArrayList<Integer> varaintIds) {
+        try {
+            JSONArray jArray = new JSONArray();
+            for (int i = 0; i < varaintIds.size(); i++) {
+                JSONObject jObj = new JSONObject();
+                jObj.put("id", varaintIds.get(i));
+                jArray.put(jObj);
+            }
+            return jArray;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new JSONArray();
+        }
+
+    }
+
 
     private void checkBill() {
 
@@ -279,11 +330,11 @@ public class Basket extends BaseFragment implements View.OnClickListener {
         httpMan.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, params);
     }
 
-    public void afterCheckBill(Object obj){
+    public void afterCheckBill(Object obj) {
         try {
             JSONArray jsonArr = new JSONArray(obj.toString());
             billArr = new ArrayList<>();
-            for(int i=0;i<jsonArr.length();i++){
+            for (int i = 0; i < jsonArr.length(); i++) {
                 JSONObject jObj = jsonArr.getJSONObject(i);
                 boolean itemState = jObj.getBoolean("ItemState");
                 Integer orderId = jObj.getInt("OrderId");
@@ -294,12 +345,12 @@ public class Basket extends BaseFragment implements View.OnClickListener {
                 String ItemComments = jObj.getString("ItemComments");
                 double unitPrice = jObj.getDouble("UnitPrice");
                 Integer orderRequestState = jObj.getInt("OrderRequestStateId");
-                billArr.add(new CheckBillModel(itemState,orderId,itemId,itemQuantity,itemCode
-                        ,itemName,ItemComments,unitPrice,orderRequestState));
+                billArr.add(new CheckBillModel(itemState, orderId, itemId, itemQuantity, itemCode
+                        , itemName, ItemComments, unitPrice, orderRequestState));
             }
-            if(billArr.size()>0){
+            if (billArr.size() > 0) {
                 btnCheckBill.setEnabled(true);
-            }else
+            } else
                 btnCheckBill.setEnabled(false);
         } catch (JSONException e) {
             e.printStackTrace();
@@ -308,8 +359,8 @@ public class Basket extends BaseFragment implements View.OnClickListener {
 
     private void toCheckBill() {
         CheckBill chkFrag = new CheckBill();
-        chkFrag.setmCheckBillArr(((TabActivity)getActivity()).billArr);
-        ((TabActivity)getActivity()).replaceFragment(chkFrag,true);
+        chkFrag.setmCheckBillArr(((TabActivity) getActivity()).billArr);
+        ((TabActivity) getActivity()).replaceFragment(chkFrag, true);
     }
 
 
@@ -317,8 +368,8 @@ public class Basket extends BaseFragment implements View.OnClickListener {
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.btn_submit:
-                if(SignalRManager.getInstance().isConnected()){
-                    ((TabActivity)getActivity()).showGenricDialog(getActivity(), "Submit Order ?", "Proceed", "Cancel"
+                if (SignalRManager.getInstance().isConnected()) {
+                    ((TabActivity) getActivity()).showGenricDialog(getActivity(), "Submit Order ?", "Proceed", "Cancel"
                             , new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialogInterface, int i) {
@@ -330,7 +381,7 @@ public class Basket extends BaseFragment implements View.OnClickListener {
                                     dialogInterface.dismiss();
                                 }
                             });
-                }else{
+                } else {
                     AppHelper.showConnectionAlert(getActivity());
                 }
 
@@ -339,7 +390,8 @@ public class Basket extends BaseFragment implements View.OnClickListener {
                 orderAdapter.setDeleteEnabled();
                 break;
             case R.id.btn_check_bill:
-                /*checkBill();*/toCheckBill();
+                /*checkBill();*/
+                toCheckBill();
                 break;
             case R.id.btn_gto_menu:
                 gtoMenu();
@@ -348,11 +400,11 @@ public class Basket extends BaseFragment implements View.OnClickListener {
     }
 
 
-
-    public void removeItemFromBasket(int pos){
+    public void removeItemFromBasket(int pos) {
         orderAdapter.remove(pos);
-        setOrderArrForPost();setViews();
-        ((TabActivity)getActivity()).updateBasketItemCount();
+        setOrderArrForPost();
+        setViews();
+        ((TabActivity) getActivity()).updateBasketItemCount();
         /*mHashMapOrder.remove(mKeys.get(pos));
         mKeys.remove(pos);*/
         /*orderAdapter.setData(mHashMapOrder,mKeys);
@@ -360,15 +412,15 @@ public class Basket extends BaseFragment implements View.OnClickListener {
         */
     }
 
-    public void chageQuanttiy(int pos,int newQuantity){
+    public void chageQuanttiy(int pos, int newQuantity) {
         mHashMapOrder.get(mKeys.get(pos)).setQuantity(newQuantity);
         setViews();
-        ((TabActivity)getActivity()).updateBasketItemCount();
+        ((TabActivity) getActivity()).updateBasketItemCount();
         setOrderArrForPost();
     }
 
-    public void updateCheckBillBtn(){
-        if(((TabActivity)getActivity()).billArr.size()>0)
+    public void updateCheckBillBtn() {
+        if (((TabActivity) getActivity()).billArr.size() > 0)
             btnCheckBill.setEnabled(true);
         else
             btnCheckBill.setEnabled(false);

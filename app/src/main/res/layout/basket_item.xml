@@ -71,6 +71,15 @@
                     android:textColor="@color/sub_text_color"
                     android:textSize="12.7sp"
                     android:visibility="gone" />
+                <TextView
+                    android:id="@+id/tv_accepted_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Comment"
+                    android:textColor="@color/sub_text_color"
+                    android:textSize="12.7sp"
+                    android:visibility="gone" />
+
 
             </LinearLayout>
 

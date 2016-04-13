@@ -11,6 +11,8 @@ import android.widget.TextView;
 
 import com.dd.menyoo.MenuActivity;
 import com.dd.menyoo.R;
+import com.dd.menyoo.TabActivity;
+import com.dd.menyoo.fragment.MenuTab2;
 import com.dd.menyoo.model.CategoryModel;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
@@ -22,12 +24,13 @@ import java.util.HashMap;
  * Created by Administrator on 19-Feb-16.
  */
 public class FullMenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-    private HashMap<String,ArrayList<CategoryModel>>  mDataList;
+    private HashMap<String, ArrayList<CategoryModel>> mDataList;
     private ArrayList<CategoryModel> mAllData;
     private ArrayList<String> keys;
     private int mRowIndex = -1;
     Context mCtx;
     View.OnClickListener mClickListener;
+
     private int[] mColors = new int[]{R.color.tab_default, R.color.tab_selected,
             R.color.blue_backgroud, R.color.blue_iphone,
             R.color.btn_color_Sec};
@@ -38,13 +41,13 @@ public class FullMenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         mAllData = new ArrayList<>();
     }
 
-    public void setData(HashMap<String,ArrayList<CategoryModel>> data,ArrayList<String> keys) {
+    public void setData(HashMap<String, ArrayList<CategoryModel>> data, ArrayList<String> keys) {
         if (mDataList != data) {
             mDataList = data;
-            this.keys=keys;
-            for(String key:keys){
-                if(mDataList.containsKey(key))
-                mAllData.addAll(mDataList.get(key));
+            this.keys = keys;
+            for (String key : keys) {
+                if (mDataList.containsKey(key))
+                    mAllData.addAll(mDataList.get(key));
             }
             notifyDataSetChanged();
         }
@@ -61,7 +64,7 @@ public class FullMenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder rawHolder, final int position) {
         final ItemViewHolder holder = (ItemViewHolder) rawHolder;
-        CategoryModel cm = mAllData.get(position);
+        final CategoryModel cm = mAllData.get(position);
         holder.tvMenu.setText(cm.getName());
         holder.pb_wait.bringToFront();
         if (!cm.getImageName().trim().isEmpty())
@@ -79,8 +82,16 @@ public class FullMenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                         }
                     });
         holder.ivMenu.setTag(cm);
-        if (mClickListener != null)
-            holder.ivMenu.setOnClickListener(mClickListener);
+        /*if (mClickListener != null)*/
+        holder.ivMenu.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                MenuTab2 menuTab2 = new MenuTab2();
+                menuTab2.setCategory(cm);
+                ((TabActivity) mCtx).replaceFragment(menuTab2, true);
+                ((TabActivity)mCtx).categoryPositionToScroll = position+cm.getCategoriesBefore();
+            }
+        });
         // holder.quickImageView.setImageResource(mDataList.get(position));
     }
 

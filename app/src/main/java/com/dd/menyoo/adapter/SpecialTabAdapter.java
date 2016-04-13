@@ -8,6 +8,7 @@ import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -17,6 +18,7 @@ import android.widget.TextView;
 import com.dd.menyoo.R;
 import com.dd.menyoo.TabActivity;
 import com.dd.menyoo.common.AppController;
+import com.dd.menyoo.common.AppHelper;
 import com.dd.menyoo.common.RoundedTransformation;
 import com.dd.menyoo.fragment.BaseFragment;
 import com.dd.menyoo.fragment.OrderPlacement;
@@ -120,6 +122,7 @@ public class SpecialTabAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     if (((TabActivity) mCtx).checkIsTableAcquired()) {
                         OrderPlacement orderPlacement = new OrderPlacement();
                         orderPlacement.setmMenuModel(menuItem);
+                        ((TabActivity)mCtx).specailPositioToScroll = position;
                         ((TabActivity) mCtx).replaceFragment(orderPlacement, true);
                     } else {
                         ((TabActivity) mCtx).showTableDialog();
@@ -161,6 +164,7 @@ public class SpecialTabAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
                         }
                     });
+        setViewMore(holder,position);
         /*else
             holder.pb_wait.setVisibility(View.GONE);*/
 
@@ -182,7 +186,7 @@ public class SpecialTabAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     private class ItemViewHolder extends RecyclerView.ViewHolder {
 
         private ImageView image;
-        private TextView tvTitle, tvDescrition, tvPrice, tvTopHeader, tvDiscount;
+        private TextView tvTitle, tvDescrition, tvPrice, tvTopHeader, tvDiscount,tvViewMore;
         private Button btnAdd;
         LinearLayout llTopHeader;
         private ProgressBar pb_wait;
@@ -198,6 +202,40 @@ public class SpecialTabAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             llTopHeader = (LinearLayout) itemView.findViewById(R.id.ll_header);
             tvDiscount = (TextView) itemView.findViewById(R.id.tv_discount);
             pb_wait = (ProgressBar) itemView.findViewById(R.id.pb_menu);
+            tvViewMore = (TextView) itemView.findViewById(R.id.tv_viewmore);
+        }
+    }
+
+    public void setViewMore(final ItemViewHolder holder,final int position){
+        holder.tvViewMore.setVisibility(View.GONE);
+        holder.tvDescrition.setMaxLines(5);
+        ViewTreeObserver vto = holder.tvDescrition.getViewTreeObserver();
+        vto.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                if (AppHelper.isTextViewEllipsized(holder.tvDescrition)) {
+                    holder.tvViewMore.setVisibility(View.VISIBLE);
+                    mDataList.get(position).setExtraData(true);
+                }else{
+                    holder.tvViewMore.setVisibility(View.GONE);
+                    mDataList.get(position).setExtraData(false);
+                }
+
+            }
+        });
+        if (mDataList.get(position).isExtraData()) {
+            holder.tvViewMore.setVisibility(View.VISIBLE);
+        } else
+            holder.tvViewMore.setVisibility(View.GONE);
+        holder.tvViewMore.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ( (TabActivity)mCtx).showSpecialDialog(mDataList.get(position).getDescription());
+            }
+        });
+        if (AppHelper.isTextViewEllipsized(holder.tvDescrition)) {
+            holder.tvViewMore.setVisibility(View.VISIBLE);
+            mDataList.get(position).setExtraData(true);
         }
     }
 }

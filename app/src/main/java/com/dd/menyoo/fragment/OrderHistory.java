@@ -25,7 +25,9 @@ import com.dd.menyoo.adapter.OrderAdapter;
 import com.dd.menyoo.adapter.OrderHistoryAdapter;
 import com.dd.menyoo.common.AppController;
 import com.dd.menyoo.common.AppHelper;
+import com.dd.menyoo.model.CategoryExtra;
 import com.dd.menyoo.model.CheckBillModel;
+import com.dd.menyoo.model.Options;
 import com.dd.menyoo.model.OrderHistoryModel;
 import com.dd.menyoo.network.NetworkManagerOld;
 import com.dd.menyoo.network.TaskCompleted;
@@ -176,13 +178,34 @@ public class OrderHistory extends BaseFragment {
                 String ItemComments = jObj.getString("ItemComments");
                 double unitPrice = jObj.getDouble("UnitPrice");
                 String userName = jObj.getString("UserName");
+                String acceptedTime = jObj.getString("CreateTime");
+                ArrayList<CategoryExtra> variants= getExtraOptionData(jObj.getJSONArray("Extras"));
+                acceptedTime =  AppHelper.getDateTimeForAcceptedTime(acceptedTime);
                 Integer orderRequestState = jObj.getInt("OrderRequestStateId");
                 billArr.add(new CheckBillModel(itemState,userName,orderId,itemId,itemQuantity,itemCode
-                        ,itemName,ItemComments,unitPrice,orderRequestState));
+                        ,itemName,ItemComments,unitPrice,orderRequestState,acceptedTime,variants));
             }
             showOrderDialog(billArr);
         } catch (JSONException e) {
             e.printStackTrace();
+        }
+    }
+
+    public ArrayList<CategoryExtra> getExtraOptionData(JSONArray extras){
+        try {
+            ArrayList<CategoryExtra> categoryExtras = new ArrayList<>();
+            for(int i=0;i<extras.length();i++){
+                String optionName = extras.getJSONObject(i).getString("Option");
+                double price = extras.getJSONObject(i).getDouble("Price");
+                Options option = new Options(optionName,price);
+                ArrayList<Options> optionses = new ArrayList<>();
+                optionses.add(option);
+                categoryExtras.add(new CategoryExtra("",optionses));
+            }
+            return categoryExtras;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return  null;
         }
     }
 

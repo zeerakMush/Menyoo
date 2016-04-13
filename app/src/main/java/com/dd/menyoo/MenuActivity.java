@@ -247,8 +247,12 @@ public class MenuActivity extends BaseClass
                 boolean isComingSoon = jObj.getBoolean("IsCommingSoon");
                 boolean isReadOnly = jObj.getBoolean("IsReadOnly");
                 String feedBackEmail = jObj.getString("FeedBackEmail");
+                /*String loyalityDetails = jObj.getString("LoyalityDetails");
+                String loyalityRequirements = jObj.getString("LoyalityRequirements");*/
+
                 if (!isComingSoon)
-                    mRestaurantArr.add(new RestaurantModel(id, name, imageImage, isTableOccupied, isResActive, feedBackEmail, isReadOnly));
+                    mRestaurantArr.add(new RestaurantModel(id, name, imageImage,
+                            isTableOccupied, isResActive, feedBackEmail,/*loyalityRequirements,loyalityDetails ,*/isReadOnly));
                 else {
                     String comingSoonMessage = jObj.getString("IsCommingSoonMessage");
                     mRestaurantArr.add

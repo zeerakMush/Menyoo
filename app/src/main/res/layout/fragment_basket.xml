@@ -64,14 +64,17 @@
             android:enabled="false"
             android:background="@drawable/button_left"
             android:text="Check Bill"
+            android:visibility="gone"
             android:textSize="17sp" />
 
         <Button
             android:id="@+id/btn_submit"
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:background="@drawable/button_right"
+            android:paddingBottom="10dp"
+            android:paddingTop="10dp"
+            android:background="@drawable/btn_defult"
             android:singleLine="true"
             android:text="Submit Order"
             android:textSize="17sp" />
@@ -135,7 +138,7 @@
         <android.support.v7.widget.RecyclerView
             android:id="@+id/rv_order"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_above="@id/dvider"
             android:foregroundGravity="center"
             android:padding="5dp"

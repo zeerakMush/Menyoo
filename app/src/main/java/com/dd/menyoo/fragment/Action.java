@@ -196,8 +196,8 @@ public class Action extends BaseFragment implements View.OnClickListener {
                         "This feature will be released soon. Stay tuned.");
                 break;
             case R.id.llLoyaltyReward:
-                ((TabActivity)getActivity()).showDisableDialog(getActivity(),
-                        "This feature will be released soon. Stay tuned.");
+                 
+                /*((TabActivity)getActivity()).replaceFragment(new Loyality(),true);*/
                 break;
         }
     }

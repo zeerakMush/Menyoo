@@ -1,5 +1,7 @@
 package com.dd.menyoo.model;
 
+import java.util.ArrayList;
+
 /**
  * Created by Administrator on 19-Feb-16.
  */
@@ -16,6 +18,7 @@ public class MenuModel extends BaseClassModel {
     private int itemType;
     private boolean isExtraData = false;
     private String categoryName;
+    private ArrayList<CategoryExtra> variants;
 
 
     public String getTitle() {
@@ -46,7 +49,7 @@ public class MenuModel extends BaseClassModel {
         return price;
     }
 
-    public void setPrice(int price) {
+    public void setPrice(double price) {
         this.price = price;
     }
 
@@ -108,17 +111,24 @@ public class MenuModel extends BaseClassModel {
         this.categoryName = categoryName;
     }
 
+    public ArrayList<CategoryExtra> getVariants() {
+        return variants;
+    }
+
     public MenuModel() {
     }
 
     public MenuModel(String title, String description,
-                     String imageName, double price, int itemID, boolean isSpecial, String dicount,boolean isPopular,boolean isfirstTimeItem) {
+                     String imageName, double price, int itemID,
+                     boolean isSpecial, String dicount,boolean isPopular,
+                     boolean isfirstTimeItem,boolean isExtraData) {
         this.title = title;
         this.description = description;
         this.imageName = imageName;
         this.price = price;
         this.itemID = itemID;
         this.discount = dicount;
+        this.isExtraData = isExtraData;
         setSpecial(isSpecial);
         setPopular(isPopular);
         setIsfirstTimeItem(isfirstTimeItem);
@@ -134,6 +144,14 @@ public class MenuModel extends BaseClassModel {
         this.isExtraData=isExtraData;
     }
 
+    public MenuModel(String title, String description, double price, int itemID,boolean isExtraData,ArrayList<CategoryExtra> variants) {
+        this.title = title;
+        this.description = description;
+        this.price = price;
+        this.itemID = itemID;
+        this.isExtraData=isExtraData;
+        this.variants = variants;
+    }
     public static enum type{
         Poplar{
             @Override

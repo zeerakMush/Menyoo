@@ -119,7 +119,11 @@ public class LoginActivity extends BaseClass implements FacebookCallback<LoginRe
                                 }else
                                     proficPic="";
                                 String accessToken = token.getToken();
-                                String email = object.getString("email");
+                                String email;
+                                if(object.has("email"))
+                                    email = object.getString("email");
+                                else
+                                    email = "";
                                 RegisterThroughFacebook(new FacebookUserModel(firstName,lastName,userID,
                                         proficPic,accessToken,email));
                             } catch (JSONException e) {

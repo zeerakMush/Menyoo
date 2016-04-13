@@ -3,6 +3,7 @@ package com.dd.menyoo.fragment;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -72,12 +73,14 @@ public class MenuTab1 extends BaseFragment {
     }
     FullMenuAdapter fmAdapter;
     SectionedGridRecyclerViewAdapter mSectionedAdapter;
+    GridLayoutManager glmMenu;
 
     public void setAdapter() {
        // mCategoryArr = new ArrayList<>();
         fmAdapter = new FullMenuAdapter(getActivity());
         rvMenuTab1.setHasFixedSize(true);
-        rvMenuTab1.setLayoutManager(new GridLayoutManager(getActivity(), 2));
+        glmMenu = new GridLayoutManager(getActivity(), 2);
+        rvMenuTab1.setLayoutManager(glmMenu);
         fmAdapter.setData(mHashItemArray,mCategoryKeys);
         fmAdapter.setmClickListener(new View.OnClickListener() {
             @Override
@@ -122,9 +125,6 @@ public class MenuTab1 extends BaseFragment {
         httpMan.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, params);
     }
 
-
-
-
     private void afterGetCategoriesNew(Object obj) {
         try {
             pbMenu.setVisibility(View.GONE);
@@ -150,17 +150,40 @@ public class MenuTab1 extends BaseFragment {
                     String parentID = jObj.getString("ParentId");
                     String categoryMessage = jObj.getString("CategoryMessage");
                     key = parentID;
-                    categorys.add(new CategoryModel(id,name,imageNAme,parentID,categoryMessage));
+                    CategoryModel cm = new CategoryModel(id,name,imageNAme,parentID,categoryMessage);
+                    cm.setCategoriesBefore(getPositionInKeyArray(""+parentID)+1);
+                    categorys.add(cm);
                 }
                 mHashItemArray.put(key,categorys);
 
             }
             setmSections();
+            final int positionToScroll = ((TabActivity)getActivity()).categoryPositionToScroll;
+            if(positionToScroll<mSectionedAdapter.getItemCount()&&
+                    ((TabActivity)getActivity()).isToScroll)
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        glmMenu.smoothScrollToPosition(rvMenuTab1,null,positionToScroll);
+                        ((TabActivity)getActivity()).isToScroll =false;
+                        ((TabActivity)getActivity()).categoryPositionToScroll = 0;
+                    }
+                },500);
+
             rvMenuTab1.setAdapter(mSectionedAdapter);
         } catch (JSONException e) {
             e.printStackTrace();
         }
     }
+    public int getPositionInKeyArray(String id){
+        for(int i=0;i<mCategoryKeys.size();i++){
+            if(mCategoryKeys.get(i).equals(id)){
+                return i;
+            }
+        }
+        return -1;
+    }
+
     public void setmSections(){
         List<SectionedGridRecyclerViewAdapter.Section> sections = new ArrayList<>();
         int nextPosition=0;

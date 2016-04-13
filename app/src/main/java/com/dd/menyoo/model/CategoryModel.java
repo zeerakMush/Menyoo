@@ -1,5 +1,7 @@
 package com.dd.menyoo.model;
 
+import java.util.ArrayList;
+
 /**
  * Created by Administrator on 22-Feb-16.
  */
@@ -10,6 +12,8 @@ public class CategoryModel {
     private String parentID;
     private String categoryMessage;
     private int priority;
+    private int categoriesBefore;
+
 
 
     public int getCategoryId() {
@@ -52,11 +56,25 @@ public class CategoryModel {
         this.categoryMessage = categoryMessage;
     }
 
-    public CategoryModel(int categoryId, String name, String imageName, String parentID,String categoryMessage) {
+    public int getCategoriesBefore() {
+        return categoriesBefore;
+    }
+
+    public void setCategoriesBefore(int categoriesBefore) {
+        this.categoriesBefore = categoriesBefore;
+    }
+
+
+
+    public CategoryModel(int categoryId, String name, String imageName, String parentID, String categoryMessage) {
         this.categoryId = categoryId;
         this.name = name;
         this.imageName = imageName;
         this.parentID = parentID;
         this.categoryMessage = categoryMessage;
     }
+
+
+
+
 }
