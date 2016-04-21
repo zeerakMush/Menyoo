@@ -60,7 +60,7 @@
                         android:background="@color/btn_color_default"
                         android:paddingLeft="20dp"
                         android:paddingRight="20dp"
-                        android:text="Get" />
+                        android:text="Request" />
                 </RelativeLayout>
 
                 <View
@@ -148,7 +148,7 @@
                         android:layout_gravity="center"
                         android:layout_marginLeft="40dp"
                         android:layout_marginRight="10dp"
-                        android:text="Need the Bill"
+                        android:text="Need the Bill?"
                         android:textSize="22sp"
                         android:textStyle="bold" />
 
@@ -161,7 +161,7 @@
                         android:background="@color/btn_color_default"
                         android:paddingLeft="20dp"
                         android:paddingRight="20dp"
-                        android:text="Get" />
+                        android:text="Request" />
                 </RelativeLayout>
 
                 <View
@@ -247,7 +247,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="0.9"
-                        android:text="Claim Loyalty Rewards"
+                        android:text="Loyalty Rewards"
                         android:layout_marginRight="10dp"
                         android:textSize="22sp" />
 
@@ -277,7 +277,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="0.9"
-                        android:text="Table Reservation"
+                        android:text="Promo Code"
                         android:layout_marginRight="10dp"
                         android:textSize="22sp" />
 
@@ -338,7 +338,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="0.9"
-                        android:text="Suggestions For Menyoo"
+                        android:text="Suggestions"
                         android:layout_marginRight="10dp"
                         android:textSize="22sp" />
 

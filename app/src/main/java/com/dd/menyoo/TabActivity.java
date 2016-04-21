@@ -69,15 +69,12 @@ import java.util.Queue;
 public class TabActivity extends BaseClass implements ISignalRListener {
 
     private static final int MY_PERMISSIONS_REQUEST_CAMERA = 7;
-    private static final String WAITER_QUEUE_START_TIME = "waiterTime"
-            + AppController.getCurrentRestaurent().getRestaurantID();
-    private static final String BILL_QUEUE_START_TIME = "billTime"
-            + AppController.getCurrentRestaurent().getRestaurantID();
-    private static final String IS_CAN_GET_BILL = "isCanGetBill" +
-            AppController.getCurrentRestaurent().getRestaurantID();
-    private static final String GET_BILL_ID = "GetBillID" +
-            AppController.getCurrentRestaurent().getRestaurantID();
-    private static final String GET_RES_ID = "GetResId";
+
+    private String WAITER_QUEUE_START_TIME;
+    private  String BILL_QUEUE_START_TIME;
+    private  String IS_CAN_GET_BILL;
+    private   String GET_BILL_ID;
+    private static  String GET_RES_ID = "GetResId";
 
     public int specailPositioToScroll = 0;
     public int categoryPositionToScroll = 0;
@@ -112,6 +109,7 @@ public class TabActivity extends BaseClass implements ISignalRListener {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tab);
+        defineConstants();
         initView();
         setEditTextImeAction();
 
@@ -224,16 +222,32 @@ public class TabActivity extends BaseClass implements ISignalRListener {
                 }
             }
         });
-
         replaceFragment(new SpecialMenu(), false);
         getBannerMessage();
-
-
     }
 
+    Object waiterQueue,billQueue;
     public void subscribeToQueues() {
-        waiterQueueUpdated(new Gson().toJsonTree(dataPro.UserGetWaiterGroup("" + restaurantModel.getRestaurantID())));
-        billQueueUpdated(new Gson().toJsonTree(dataPro.UserGetBillGroup("" + restaurantModel.getRestaurantID())));
+        Thread queueThread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                waiterQueue = dataPro.UserGetWaiterGroup("" + restaurantModel.getRestaurantID());
+                billQueue = dataPro.UserGetBillGroup("" + restaurantModel.getRestaurantID());
+                afterSubscribeToQueues();
+            }
+        });
+        queueThread.start();
+    }
+
+    public void afterSubscribeToQueues(){
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                waiterQueueUpdated(new Gson().toJsonTree(waiterQueue));
+                billQueueUpdated(new Gson().toJsonTree(billQueue));
+            }
+        });
+
     }
 
     public void registerToRestrauant() {
@@ -517,6 +531,7 @@ public class TabActivity extends BaseClass implements ISignalRListener {
         registerToRestrauant();
         dataPro.SubscribeToBill(billId);
         mEtTableCode.setVisibility(View.GONE);
+        rl_tableCode.setVisibility(View.GONE);
         mTvTableCode.setVisibility(View.VISIBLE);
         mQrScanBtn.setVisibility(View.GONE);
         isTableAcquired = true;
@@ -999,10 +1014,12 @@ public class TabActivity extends BaseClass implements ISignalRListener {
                     rl_tableJoin.setVisibility(View.GONE);
                     showGuestDialog("You have joined the table");
                 } else if (AppController.isHost()) {
-                    showGuestDialog(String.format("%s has joined the table. Order together and enjoy!", AppController.getCurrentGuest().getname()));
+                    showGuestDialog(String.format("%s has joined the table. Order together and enjoy!",
+                            AppController.getCurrentGuest().getname()));
                 }
             } else {
-                if (AppController.getCurrentGuest() != null && !AppController.isHost() && AppController.getCurrentGuest().getRequestId() == reqId) {
+                if (AppController.getCurrentGuest() != null && !AppController.isHost() &&
+                        AppController.getCurrentGuest().getRequestId() == reqId) {
                     showGuestDialog(String.format("Host rejected your request"));
                     AppController.setCurrentGuest(null);
                     AppController.setTableId(""+0);
@@ -1127,7 +1144,7 @@ public class TabActivity extends BaseClass implements ISignalRListener {
                 Integer orderId = jObj.getInt("OrderId");
                 Integer itemId = jObj.getInt("ItemId");
                 Integer itemQuantity = jObj.getInt("ItemQuaintity");
-                String itemCode = jObj.getString("ItemCode");
+                String itemCode = /*jObj.getString("ItemCode")*/"";
                 String itemName = jObj.getString("ItemName");
                 String ItemComments = jObj.getString("ItemComments");
                 String acceptedTime = jObj.getString("CreateTime");
@@ -1292,5 +1309,19 @@ public class TabActivity extends BaseClass implements ISignalRListener {
 
     }
 
+    private  void  defineConstants(){
+        if(AppController.getCurrentRestaurent()!=null){
+            GET_BILL_ID = "GetBillID" +
+                    AppController.getCurrentRestaurent().getRestaurantID();
+            IS_CAN_GET_BILL = "isCanGetBill" +
+                    AppController.getCurrentRestaurent().getRestaurantID();
+            BILL_QUEUE_START_TIME = "billTime"
+                    + AppController.getCurrentRestaurent().getRestaurantID();
+            WAITER_QUEUE_START_TIME = "waiterTime"
+                    + AppController.getCurrentRestaurent().getRestaurantID();
+        }else{
+            startActivity(new Intent(TabActivity.this,MenuActivity.class));
+        }
+    }
 }
 

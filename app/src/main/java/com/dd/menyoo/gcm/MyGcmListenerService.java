@@ -31,6 +31,8 @@ import com.dd.menyoo.R;
 import com.dd.menyoo.SplashScreen;
 import com.google.android.gms.gcm.GcmListenerService;
 
+import java.util.Random;
+
 public class MyGcmListenerService extends GcmListenerService {
 
     private static final String TAG = "MyGcmListenerService";
@@ -97,8 +99,9 @@ public class MyGcmListenerService extends GcmListenerService {
         notificationBuilder.setPriority(Notification.PRIORITY_MAX);
         NotificationManager notificationManager =
                 (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-
-        notificationManager.notify(0 /* ID of notification */, notificationBuilder.build());
+        Random randomGenerator = new Random();
+        int randomInt = randomGenerator.nextInt(100);
+        notificationManager.notify(randomInt /* ID of notification */, notificationBuilder.build());
     }
     private int getNotificationIcon() {
         boolean useWhiteIcon = (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP);

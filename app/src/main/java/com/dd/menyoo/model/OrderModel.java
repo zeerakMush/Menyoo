@@ -13,6 +13,7 @@ public class OrderModel extends BaseClassModel{
     int quantity;
     ArrayList<Integer> extraId;
     ArrayList<Double> extraPrice;
+    ArrayList<String> extraName;
 
     public MenuModel getMenu() {
         return menu;
@@ -50,17 +51,23 @@ public class OrderModel extends BaseClassModel{
         return extraPrice;
     }
 
+    public ArrayList<String> getExtraName() {
+        return extraName;
+    }
+
     public OrderModel(MenuModel menu, String comment, int quantity) {
         this.menu = menu;
         this.comment = comment;
         this.quantity = quantity;
     }
 
-    public OrderModel(MenuModel menu, String comment, int quantity, ArrayList<Integer> extraId, ArrayList<Double> extraPrice) {
+    public OrderModel(MenuModel menu, String comment, int quantity, ArrayList<Integer> extraId,
+                      ArrayList<Double> extraPrice,ArrayList<String> extraName) {
         this.menu = menu;
         this.comment = comment;
         this.quantity = quantity;
         this.extraId = extraId;
         this.extraPrice = extraPrice;
+        this.extraName = extraName;
     }
 }

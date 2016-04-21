@@ -13,18 +13,19 @@
         android:gravity="center_vertical"
         android:orientation="horizontal">
 
+
         <ImageButton
             android:id="@+id/btn_back"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:scaleType="centerCrop"
-            android:onClick="backButton"
             android:layout_centerVertical="true"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
-            android:src="@drawable/icon_back"
+            android:background="@color/black"
+            android:onClick="backButton"
             android:padding="13dp"
-            android:background="@color/black"/>
+            android:scaleType="centerCrop"
+            android:src="@drawable/icon_back" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -40,14 +41,14 @@
             android:id="@+id/btn_home"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:onClick="toRestaurants"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="10dp"
-            android:src="@drawable/home_btn_active_2x"
-            android:padding="12dp"
             android:background="@color/black"
-            android:scaleType="centerCrop" />
+            android:onClick="toRestaurants"
+            android:padding="12dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/home_btn_active_2x" />
 
     </RelativeLayout>
 
@@ -56,17 +57,16 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/ll_top"
-        android:orientation="vertical"
-        >
+        android:orientation="vertical">
 
         <RelativeLayout
             android:id="@+id/rl_banner"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:visibility="gone"
             android:layout_marginLeft="5dp"
             android:layout_marginRight="5dp"
             android:background="@drawable/border_banner"
+            android:visibility="gone"
 
             >
 
@@ -74,23 +74,22 @@
                 android:id="@+id/btn_collapse_banner"
                 android:layout_width="20dp"
                 android:layout_height="20dp"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:background="@color/transparent"
                 android:onClick="collapseBanner"
                 android:padding="4dp"
-                android:layout_alignParentRight="true"
                 android:scaleType="fitXY"
-                android:layout_alignParentEnd="true"
-                android:background="@color/transparent"
-                android:src="@drawable/cancel_note"
-                />
+                android:src="@drawable/cancel_note" />
+
             <TextView
                 android:id="@+id/tv_bannerText"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
-                android:layout_marginRight="20dp"
                 android:layout_marginLeft="20dp"
-                android:text="BannerText Here"
+                android:layout_marginRight="20dp"
                 android:gravity="center"
-                />
+                android:text="BannerText Here" />
 
         </RelativeLayout>
 
@@ -98,111 +97,113 @@
         <RelativeLayout
 
             android:layout_width="match_parent"
-            android:layout_height="60dp"
+            android:layout_height="65dp"
             android:background="@color/black"
             android:padding="7dp">
-
-
             <RelativeLayout
-                android:id="@+id/rl_table_code"
-                android:layout_width="122dp"
-                android:visibility="visible"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
+                android:id="@+id/rl_right"
+                android:layout_width="wrap_content"
                 android:layout_alignParentEnd="true"
-                android:layout_alignParentRight="true">
-
-                <EditText
-                    android:id="@+id/et_tableCode"
-                    android:textSize="14sp"
+                android:layout_alignParentRight="true"
+                android:layout_height="match_parent">
+                <RelativeLayout
+                    android:id="@+id/rl_table_code"
                     android:layout_width="122dp"
                     android:layout_height="wrap_content"
-                    android:visibility="visible"
-                    android:padding="5dp"
-                    android:textColor="@color/bottom_menu_color"
-                    android:background="@drawable/custom_edit_text"
-                    android:drawableLeft="@drawable/table_icon"
-                    android:hint="Table Code"
-                    android:imeOptions="actionDone"
-                    android:inputType="text" />
+                    android:layout_centerVertical="true"
+                    android:visibility="visible">
 
-                <ProgressBar
-                    android:id="@+id/pb_tablecode"
-                    android:layout_width="25dp"
-                    android:layout_height="25dp"
-                    android:visibility="gone"
+                    <EditText
+                        android:id="@+id/et_tableCode"
+                        android:layout_width="122dp"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/custom_edit_text"
+                        android:drawableLeft="@drawable/table_icon"
+                        android:hint="Table Code"
+                        android:imeOptions="actionDone"
+                        android:inputType="text"
+                        android:padding="5dp"
+                        android:textColor="@color/bottom_menu_color"
+                        android:textSize="14sp"
+                        android:visibility="visible" />
+
+                    <ProgressBar
+                        android:id="@+id/pb_tablecode"
+                        style="@style/Base.Widget.AppCompat.ProgressBar"
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"
+                        android:layout_alignParentRight="true"
+                        android:layout_alignParentEnd="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginRight="5dp"
+                        android:visibility="gone" />
+
+                    <Button
+                        android:id="@+id/btn_qr"
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:background="@drawable/qr_code_scan"
+                        android:onClick="ToQrScanner"
+                        android:visibility="gone" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/rl_table_request_wait"
+                    android:layout_width="122dp"
+                    android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:layout_alignParentEnd="true"
-                    android:layout_marginRight="5dp"
-                    style="@style/Base.Widget.AppCompat.ProgressBar"
-                    />
-                <Button
-                    android:id="@+id/btn_qr"
-                    android:layout_width="25dp"
-                    android:layout_height="25dp"
-                    android:onClick="ToQrScanner"
+                    android:visibility="gone">
+
+                    <ProgressBar
+                        android:id="@+id/pb_tablerequestWait"
+                        style="@style/Base.Widget.AppCompat.ProgressBar"
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"
+                        android:layout_alignParentEnd="true"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginRight="5dp"
+                        android:visibility="visible" />
+
+                    <Button
+                        android:id="@+id/btn_table_request_wait"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_toLeftOf="@id/pb_tablerequestWait"
+                        android:background="@drawable/cancel_request"
+                        android:onClick="cancelGuestRequest" />
+                </RelativeLayout>
+
+                <TextView
+                    android:id="@+id/tv_tableCode"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:visibility="gone"
-                    android:background="@drawable/qr_code_scan"
-                    android:layout_alignParentRight="true"
-                    />
+                    android:layout_marginRight="0dp"
+                    android:text="Table 496"
+                    android:textColor="@color/btn_color_default"
+                    android:textSize="17sp"
+                    android:textStyle="bold"
+                    android:visibility="gone" />
             </RelativeLayout>
 
-            <RelativeLayout
-                android:id="@+id/rl_table_request_wait"
-                android:layout_width="122dp"
-                android:visibility="gone"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_alignParentEnd="true"
-                android:layout_alignParentRight="true">
-                <ProgressBar
-                    android:id="@+id/pb_tablerequestWait"
-                    android:layout_width="25dp"
-                    android:layout_height="25dp"
-                    android:visibility="visible"
-                    android:layout_centerVertical="true"
-                    android:layout_alignParentEnd="true"
-                    android:layout_alignParentRight="true"
-                    android:layout_marginRight="5dp"
-                    style="@style/Base.Widget.AppCompat.ProgressBar"
-                    />
-                <Button
-                    android:id="@+id/btn_table_request_wait"
-                    android:layout_width="30dp"
-                    android:onClick="cancelGuestRequest"
-                    android:layout_height="30dp"
-                    android:layout_toLeftOf="@id/pb_tablerequestWait"
-                    android:background="@drawable/cancel_request"
-                    />
-            </RelativeLayout>
+
 
             <TextView
                 android:id="@+id/res_name"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:gravity="center_vertical"
-                android:layout_toLeftOf="@id/rl_table_code"
-                android:layout_alignParentStart="true"
                 android:layout_alignParentLeft="true"
-                android:text="Restraunemtn Name"
+                android:layout_alignParentStart="true"
+                android:layout_toLeftOf="@id/rl_right"
+                android:layout_marginRight="10dp"
+                android:gravity="center_vertical"
+                android:text="Restraunemtn LArger name for testing"
                 android:textSize="20sp"
                 android:textStyle="bold" />
 
-            <TextView
-                android:id="@+id/tv_tableCode"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:textColor="@color/btn_color_default"
-                android:text="Table"
-                android:textSize="17sp"
-                android:visibility="gone"
-                android:textStyle="bold"
-                android:layout_marginRight="10dp"
-                android:layout_alignParentEnd="true"
-                android:layout_alignParentRight="true"
-                />
 
         </RelativeLayout>
 
@@ -214,37 +215,37 @@
         android:layout_height="50dp"
         android:layout_alignParentBottom="true"
         android:background="@color/bottom_menu_color"
-        android:gravity="center_vertical"
-        android:baselineAligned="false">
+        android:baselineAligned="false"
+        android:gravity="center_vertical">
 
         <LinearLayout
             android:id="@+id/ll_special"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:background="@color/btn_color_default"
             android:onClick="toSpecials"
             android:orientation="vertical"
-            android:background="@color/btn_color_default"
             android:paddingLeft="10dp"
             android:paddingRight="10dp">
 
             <ImageView
                 android:layout_width="28dp"
                 android:layout_height="0dp"
-                android:layout_marginTop="5dp"
-                android:layout_marginBottom="3dp"
                 android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="3dp"
+                android:layout_marginTop="5dp"
                 android:layout_weight="1"
                 android:src="@drawable/icon_specials" />
 
             <TextView
                 android:id="@+id/btn_btn1"
-                android:layout_gravity="center_horizontal"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="13sp"
+                android:layout_gravity="center_horizontal"
                 android:singleLine="true"
-                android:text="Specials" />
+                android:text="Specials"
+                android:textSize="13sp" />
         </LinearLayout>
 
         <LinearLayout
@@ -259,11 +260,11 @@
 
             <ImageView
                 android:layout_width="28dp"
-                android:layout_marginTop="5dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:layout_weight="1"
                 android:layout_marginBottom="3dp"
+                android:layout_marginTop="5dp"
+                android:layout_weight="1"
                 android:src="@drawable/icon_menu" />
 
             <TextView
@@ -271,46 +272,46 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:textSize="13sp"
                 android:singleLine="true"
-                android:text="Menu" />
+                android:text="Menu"
+                android:textSize="13sp" />
         </LinearLayout>
 
         <LinearLayout
             android:id="@+id/ll_basket"
-            android:layout_weight="1"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
+            android:layout_weight="1"
             android:onClick="toBasket"
+            android:orientation="vertical"
             android:paddingLeft="10dp"
             android:paddingRight="10dp">
+
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="1"
-                >
+                android:layout_weight="1">
 
 
                 <ImageView
                     android:layout_width="28dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
-                    android:layout_marginBottom="3dp"
                     android:layout_centerHorizontal="true"
+                    android:layout_marginBottom="3dp"
+                    android:layout_marginTop="5dp"
                     android:src="@drawable/icon_basket" />
+
                 <TextView
                     android:id="@+id/basket_count"
                     android:layout_width="15dp"
                     android:layout_height="15dp"
-                    android:gravity="center"
-                    android:textSize="9sp"
-                    android:textStyle="bold"
-                    android:visibility="gone"
-                    android:text="1"
                     android:layout_alignParentRight="true"
                     android:background="@drawable/notification_icon_2x"
-                    />
+                    android:gravity="center"
+                    android:text="1"
+                    android:textSize="9sp"
+                    android:textStyle="bold"
+                    android:visibility="gone" />
             </RelativeLayout>
 
             <TextView
@@ -318,13 +319,13 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:textSize="13sp"
                 android:singleLine="true"
-                android:text="Basket" />
+                android:text="Basket"
+                android:textSize="13sp" />
 
         </LinearLayout>
+
         <LinearLayout
-            android:visibility="gone"
             android:id="@+id/ll_checkbill"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -332,14 +333,15 @@
             android:onClick="toBill"
             android:orientation="vertical"
             android:paddingLeft="10dp"
-            android:paddingRight="10dp">
+            android:paddingRight="10dp"
+            android:visibility="gone">
 
             <ImageView
                 android:layout_width="28dp"
-                android:layout_marginTop="5dp"
-                android:layout_marginBottom="3dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="3dp"
+                android:layout_marginTop="5dp"
                 android:layout_weight="1"
                 android:src="@drawable/icon_checkbill" />
 
@@ -348,15 +350,16 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:textSize="13sp"
                 android:singleLine="true"
-                android:text="Bill" />
+                android:text="Bill"
+                android:textSize="13sp" />
         </LinearLayout>
+
         <LinearLayout
             android:id="@+id/ll_action"
-            android:layout_weight="1"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:onClick="toAction"
             android:orientation="vertical"
             android:paddingLeft="10dp"
@@ -365,9 +368,9 @@
             <ImageView
                 android:layout_width="28dp"
                 android:layout_height="0dp"
-                android:layout_marginTop="5dp"
-                android:layout_marginBottom="3sp"
                 android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="3sp"
+                android:layout_marginTop="5dp"
                 android:layout_weight="1"
                 android:src="@drawable/icon_action" />
 
@@ -376,9 +379,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:textSize="13sp"
                 android:singleLine="true"
-                android:text="Action" />
+                android:text="Action"
+                android:textSize="13sp" />
         </LinearLayout>
 
 

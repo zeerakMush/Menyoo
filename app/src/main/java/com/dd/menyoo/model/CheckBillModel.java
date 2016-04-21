@@ -69,6 +69,10 @@ public class CheckBillModel {
         return varaints;
     }
 
+    public void setUnitPrice(double unitPrice) {
+        this.unitPrice = unitPrice;
+    }
+
     public CheckBillModel(boolean itemState, Integer orderId,
                           Integer itemId, Integer quantity,
                           String itemCode, String itemName,

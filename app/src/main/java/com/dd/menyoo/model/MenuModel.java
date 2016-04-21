@@ -121,7 +121,8 @@ public class MenuModel extends BaseClassModel {
     public MenuModel(String title, String description,
                      String imageName, double price, int itemID,
                      boolean isSpecial, String dicount,boolean isPopular,
-                     boolean isfirstTimeItem,boolean isExtraData) {
+                     boolean isfirstTimeItem,boolean isExtraData
+            ,ArrayList<CategoryExtra> variants) {
         this.title = title;
         this.description = description;
         this.imageName = imageName;
@@ -132,6 +133,7 @@ public class MenuModel extends BaseClassModel {
         setSpecial(isSpecial);
         setPopular(isPopular);
         setIsfirstTimeItem(isfirstTimeItem);
+        this.variants = variants;
        /* this.isSpecial = isSpecial;
         this.isPopular = isPopular;*/
     }
@@ -144,7 +146,9 @@ public class MenuModel extends BaseClassModel {
         this.isExtraData=isExtraData;
     }
 
-    public MenuModel(String title, String description, double price, int itemID,boolean isExtraData,ArrayList<CategoryExtra> variants) {
+    public MenuModel(String title, String description,
+                     double price, int itemID,
+                     boolean isExtraData,ArrayList<CategoryExtra> variants) {
         this.title = title;
         this.description = description;
         this.price = price;

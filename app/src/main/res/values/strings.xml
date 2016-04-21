@@ -16,17 +16,18 @@
     <string name="url">http://203.130.28.214:3376/Menyoo/Service/</string>
     <string name="url_offline1">http://192.168.0.25/menyoo/Service/</string>
 
-    <!-- <string name="url_offline">http://203.130.28.214:3374/Menyoo/Service/</string>
-    <string name="url_offline_signalR">http://203.130.28.214:3374/Menyoo</string>-->
+    <!--  <string name="url_offline">http://203.130.28.214:337u4/Menyoo/Service/</string>
+     <string name="url_offline_signalR">http://203.130.28.214:3374/Menyoo</string>-->
 
     <!--<string name="url_offline">http://52.77.40.122/Service/</string>
     <string name="url_offline_signalR">http://52.77.40.122</string>-->
 
-    <!--   <string name="url_offline">http://52.77.40.122/Menyoo/Service/</string>
+    <!--<string name="url_offline">http://52.77.40.122/Menyoo/Service/</string>
     <string name="url_offline_signalR">http://52.77.40.122/Menyoo</string>-->
 
     <string name="url_offline">http://115.186.125.78:3374/MenyooDev/Service/</string>
     <string name="url_offline_signalR">http://115.186.125.78:3374/MenyooDev</string>
+
     <string name="spinner_title">Some title</string>
     <string name="facebook_app_id">191050881259860</string>
     <string name="login">EmailLogin</string>

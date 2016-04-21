@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.dd.menyoo.R;
@@ -18,7 +19,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 
-public class CheckBillAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
+public class CheckBillAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private ArrayList<CheckBillModel> mDataList;
     Context mCtx;
 
@@ -33,7 +34,6 @@ public class CheckBillAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         }
     }
 
-
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         Context context = parent.getContext();
@@ -46,41 +46,64 @@ public class CheckBillAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     public void onBindViewHolder(RecyclerView.ViewHolder rawHolder, final int position) {
         final ItemViewHolder holder = (ItemViewHolder) rawHolder;
         double additionalPrice = 0.0;
+        String variantNameCvs = "";
 
         CheckBillModel item = mDataList.get(position);
 
-        String orderName = String.format("x%d %s",item.getQuantity(),item.getItemName());
+        String orderName = String.format("x%d %s", item.getQuantity(), item.getItemName());
         holder.tvTitle.setText(orderName);
-        if(item.getVaraints()!=null)
-        {   additionalPrice = 0.0;
-            for(CategoryExtra extra: item.getVaraints())
+        if (item.getVaraints() != null) {
+            additionalPrice = 0.0;
+            for (CategoryExtra extra : item.getVaraints()) {
                 additionalPrice += extra.getOptions().get(0).getPrice();
+                if (!variantNameCvs.equals(""))
+                    variantNameCvs = variantNameCvs + ", " + extra.getOptions().get(0).getName();
+                else
+                    variantNameCvs = extra.getOptions().get(0).getName();
+            }
         }
-        holder.tvPrice.setText(String.format("RM %.2f",(item.getUnitPrice()+additionalPrice)*item.getQuantity()));
-        if(!item.getItemComment().trim().isEmpty()){
-            holder.tvComment.setVisibility(View.VISIBLE);
-            holder.tvComment.setText(item.getItemComment());
+        if (item.getUnitPrice() <= 0) {
+            holder.rlMain.setVisibility(View.GONE);
+            holder.view.setVisibility(View.GONE);
+        } else {
+            holder.rlMain.setVisibility(View.VISIBLE);
+            holder.view.setVisibility(View.VISIBLE);
         }
 
+        holder.tvPrice.setText(String.format("RM %.2f", (item.getUnitPrice() + additionalPrice) * item.getQuantity()));
+
+        if (!item.getItemComment().trim().isEmpty()) {
+            holder.tvComment.setVisibility(View.VISIBLE);
+            holder.tvComment.setText(item.getItemComment());
+        }else{
+            holder.tvComment.setVisibility(View.GONE);
+        }
+
+        if (!variantNameCvs.trim().isEmpty()) {
+            holder.tvVariantName.setVisibility(View.VISIBLE);
+            holder.tvVariantName.setText(variantNameCvs);
+        } else
+            holder.tvVariantName.setVisibility(View.GONE);
+
         String text;
-        if(item.isItemState()){
+        if (item.isItemState()) {
             text = " <font color='"
                     + mCtx.getResources().getColor(R.color.green) + "'>" + "Accepted"
                     + "</font>";
-            if(!item.getAcceptedTime().trim().isEmpty()){
+            if (!item.getAcceptedTime().trim().isEmpty()) {
                 holder.tvAcceptedTime.setText(item.getAcceptedTime());
                 holder.tvAcceptedTime.setVisibility(View.VISIBLE);
-            }else{
+            } else {
                 holder.tvAcceptedTime.setVisibility(View.GONE);
             }
 
-        }else{
+        } else {
             text = " <font color='"
                     + mCtx.getResources().getColor(R.color.red) + "'>" + "Pending"
                     + "</font>";
             holder.tvAcceptedTime.setVisibility(View.GONE);
         }
-        holder.tvState.setText(Html.fromHtml(text +" - By "+item.getUserName()),
+        holder.tvState.setText(Html.fromHtml(text + " - By " + item.getUserName()),
                 TextView.BufferType.SPANNABLE);
         holder.tvState.setVisibility(View.VISIBLE);
     }
@@ -92,8 +115,10 @@ public class CheckBillAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
     private class ItemViewHolder extends RecyclerView.ViewHolder {
 
-        private TextView tvTitle,tvPrice,tvComment,tvState,tvAcceptedTime;
+        private TextView tvTitle, tvPrice, tvComment, tvState, tvAcceptedTime, tvVariantName;
         private Button btnDelete;
+        private RelativeLayout rlMain;
+        private View view;
 
         public ItemViewHolder(View itemView) {
             super(itemView);
@@ -103,6 +128,9 @@ public class CheckBillAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             btnDelete = (Button) itemView.findViewById(R.id.btn_delete);
             tvState = (TextView) itemView.findViewById(R.id.tv_order_state);
             tvAcceptedTime = (TextView) itemView.findViewById(R.id.tv_accepted_time);
+            tvVariantName = (TextView) itemView.findViewById(R.id.tv_variant_name);
+            view = itemView.findViewById(R.id.saperator);
+            rlMain = (RelativeLayout) itemView.findViewById(R.id.rl_main);
         }
     }
 }

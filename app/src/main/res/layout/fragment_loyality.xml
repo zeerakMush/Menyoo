@@ -1,4 +1,4 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -14,14 +14,26 @@
         android:text="Loyalty"
         android:textColor="@color/secondary_text"
         android:textSize="18sp" />
-
+    <ProgressBar
+        android:id="@+id/pb_menu"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="@style/Base.Widget.AppCompat.ProgressBar"
+        android:layout_centerInParent="true"
+        />
     <View
+        android:id="@+id/view_something"
         android:layout_width="match_parent"
         android:layout_height="0.5dp"
+        android:layout_below="@id/tv_topHeader"
         android:layout_marginTop="2dp"
         android:background="@color/white" />
+
     <ScrollView
+        android:id="@+id/sv_all"
+        android:layout_below="@id/view_something"
         android:layout_width="match_parent"
+        android:visibility="gone"
         android:layout_height="match_parent">
         <LinearLayout
             android:layout_width="match_parent"
@@ -43,53 +55,13 @@
                 android:id="@+id/tv_loyalty_details"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/dummy_text"
+                android:text="="
                 android:gravity="center"
-                android:maxLines="4"
+                android:maxLines="40"
                 android:padding="10dp"
                 android:textColor="@color/secondary_text"
                 />
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="0.5dp"
-                android:layout_marginTop="2dp"
-                android:background="@color/white" />
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="100dp"
-                android:layout_margin="7dp"
-                android:padding="7dp"
-                android:orientation="vertical"
-                android:background="@drawable/border_loyalty"
-                >
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Requirements:"
-                    android:textSize="16sp"
-                    />
-                <FrameLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent">
-                    <TextView
-                        android:id="@+id/tv_loyaltyRequirment"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="@string/dummy_text"
-                        android:ellipsize="end"
-                        android:maxLines="3"
-                        />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="end|bottom"
-                        android:textColor="@drawable/btn_color"
-                        android:text="@string/read_more"/>
-                </FrameLayout>
-
-            </LinearLayout>
 
             <View
                 android:layout_width="match_parent"
@@ -115,22 +87,16 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
-                android:paddingLeft="40dp"
-                android:paddingRight="40dp"
+                android:paddingLeft="20dp"
+                android:paddingRight="20dp"
                 >
-                <TextView
-                    android:id="@+id/tv_username"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="UserName"
-                    android:textSize="17sp"
-                    android:textStyle="bold"
-                    />
+
                 <TextView
                     android:id="@+id/tv_levels"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="UserNssame"
+
+                    android:text="level 1  (0 stamps)"
                     android:textColor="@color/blue_iphone"
                     android:layout_alignParentEnd="true"
                     android:layout_alignParentRight="true"
@@ -138,75 +104,88 @@
                     android:textSize="17sp"
                     android:textStyle="bold"
                     />
+                <TextView
+                    android:id="@+id/tv_username"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="UserName "
+                    android:layout_toLeftOf="@id/tv_levels"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    android:layout_marginRight="16dp"
+                    android:layout_marginEnd="16dp"
+                    android:textSize="17sp"
+                    android:textStyle="bold"
+                    />
             </RelativeLayout>
             <LinearLayout
-                android:id="@+id/ll_stamps"
+                android:id="@+id/ll_addstamps"
+                android:orientation="vertical"
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:orientation="horizontal"
-                android:weightSum="5"
-                >
-                <ImageView
-                    android:id="@+id/iv_stamp1"
-                    android:layout_width="60dp"
-                    android:layout_height="match_parent"
-                    android:src="@drawable/lock"
-                    android:scaleType="fitCenter"
-                    android:layout_weight="1"
-                    android:padding="10dp"
-                    />
-
-                <ImageView
-                    android:id="@+id/iv_stamp2"
-                    android:layout_width="60dp"
-                    android:layout_height="match_parent"
-                    android:src="@drawable/lock"
-                    android:scaleType="centerInside"
-                    android:layout_weight="1"
-                    android:padding="10dp"
-                    />
-                <ImageView
-                    android:id="@+id/iv_stamp3"
-                    android:layout_width="60dp"
-                    android:layout_height="match_parent"
-                    android:src="@drawable/lock"
-                    android:scaleType="centerInside"
-                    android:layout_weight="1"
-                    android:padding="10dp"
-                    />
-                <ImageView
-                    android:id="@+id/iv_stamp4"
-                    android:layout_width="60dp"
-                    android:layout_height="match_parent"
-                    android:src="@drawable/lock"
-                    android:scaleType="centerInside"
-                    android:layout_weight="1"
-                    android:padding="10dp"
-                    />
-                <ImageView
-                    android:id="@+id/iv_stamp5"
-                    android:layout_width="60dp"
-                    android:layout_height="match_parent"
-                    android:src="@drawable/lock"
-                    android:scaleType="centerInside"
-                    android:layout_weight="1"
-                    android:padding="10dp"
-                    />
+                android:layout_gravity="center_horizontal"
+                android:gravity="center_horizontal"
+                android:layout_height="match_parent">
 
             </LinearLayout>
             <Button
+                android:id="@+id/btn_claim"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
                 android:layout_marginTop="10dp"
                 android:layout_marginRight="15dp"
                 android:layout_marginLeft="15dp"
-                android:background="@drawable/button_claim_loyalty"
+                android:background="@drawable/btn_defult"
                 android:text="Claim"
                 />
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:layout_marginTop="10dp"
+                android:background="@color/white" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="7dp"
+                android:padding="7dp"
+                android:orientation="vertical"
+                android:background="@drawable/border_loyalty"
+                >
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Requirements:"
+                    android:textSize="16sp"
+                    />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+                    <TextView
+                        android:id="@+id/tv_loyaltyRequirment"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/dummy_text"
+                        android:ellipsize="end"
+                        android:maxLines="4"
+                        />
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="10dp"/>
+                    <TextView
+                        android:id="@+id/tv_readmore"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="end|bottom"
+                        android:textColor="@drawable/btn_color"
+                        android:text="@string/read_more"/>
+                </LinearLayout>
+
+            </LinearLayout>
             <View
                 android:layout_width="fill_parent"
                 android:layout_height="20dp"/>
         </LinearLayout>
     </ScrollView>
 
-</LinearLayout>
+</RelativeLayout>

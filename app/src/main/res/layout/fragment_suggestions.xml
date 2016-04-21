@@ -45,6 +45,7 @@
             android:layout_gravity="start"
             android:textSize="14sp"
             android:maxLength="100"
+            android:imeOptions="actionGo"
             android:gravity="start"
             android:textColorHint="@color/white"
             android:padding="10dp"

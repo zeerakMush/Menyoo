@@ -50,6 +50,7 @@ public class OrderHistory extends BaseFragment {
     ProgressBar pbWait;
     RecyclerView rvOrderHistory;
     OrderHistoryAdapter ohma;
+
     public OrderHistory() {
         // Required empty public constructor
     }
@@ -64,12 +65,13 @@ public class OrderHistory extends BaseFragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        pbWait = (ProgressBar)view.findViewById(R.id.pb_wait);
-        rvOrderHistory = (RecyclerView)view.findViewById(R.id.rv_orders);
-        getOrderHistory();setAdapter();
+        pbWait = (ProgressBar) view.findViewById(R.id.pb_wait);
+        rvOrderHistory = (RecyclerView) view.findViewById(R.id.rv_orders);
+        getOrderHistory();
+        setAdapter();
     }
 
-    public void setAdapter(){
+    public void setAdapter() {
         ohma = new OrderHistoryAdapter(getActivity());
         rvOrderHistory.setLayoutManager(new LinearLayoutManager(getActivity(),
                 LinearLayoutManager.VERTICAL, false));
@@ -77,8 +79,8 @@ public class OrderHistory extends BaseFragment {
         ohma.set_listener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                int id = (int)view.getTag();
-                checkBill(id);
+                OrderHistoryModel ohm = (OrderHistoryModel) view.getTag();
+                checkBill(ohm.getBillId(), ohm.getGst(), ohm.getSeviceTax());
             }
         });
         rvOrderHistory.setAdapter(ohma);
@@ -104,29 +106,31 @@ public class OrderHistory extends BaseFragment {
             @Override
             public void onTaskCompletedSuccessfully(Object obj) {
                 // TODO Auto-generated method stub
-                Log.e("Menyoo",obj.toString());
+                Log.e("Menyoo", obj.toString());
                 afterGetOrder(obj);
             }
         });
 
-        String url =String.format("GetBillHistory?UserId=%d", AppController.
+        String url = String.format("GetBillHistory?UserId=%d", AppController.
                 getLoginUser().getUserId());
-        String[] params = {getString(R.string.url_offline)+url};
+        String[] params = {getString(R.string.url_offline) + url};
         httpMan.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, params);
     }
 
-    public void afterGetOrder(Object obj){
+    public void afterGetOrder(Object obj) {
         try {
             pbWait.setVisibility(View.GONE);
             JSONArray jsonArr = new JSONArray(obj.toString());
             ArrayList<OrderHistoryModel> orderHistoryArr = new ArrayList<>();
-            for(int i=0;i<jsonArr.length();i++){
+            for (int i = 0; i < jsonArr.length(); i++) {
                 JSONObject jObj = jsonArr.getJSONObject(i);
-                String resName= jObj.getString("RestaurantName");
+                String resName = jObj.getString("RestaurantName");
                 int billId = jObj.getInt("BillId");
                 String date = jObj.getString("CreateDate");
-                date =  AppHelper.getDateTime(date);
-                orderHistoryArr.add(new OrderHistoryModel(resName,billId,date));
+                date = AppHelper.getDateTime(date);
+                double gst = jObj.getDouble("GST");
+                double serviceTax = jObj.getDouble("ServiceTax");
+                orderHistoryArr.add(new OrderHistoryModel(resName, billId, date, gst, serviceTax));
             }
             ohma.setData(orderHistoryArr);
         } catch (JSONException e) {
@@ -134,8 +138,8 @@ public class OrderHistory extends BaseFragment {
         }
     }
 
-    private void checkBill(Integer billId ){
-        AppHelper.getInstance().showProgressDialog("Please Wait",getActivity());
+    private void checkBill(Integer billId, final double gst, final double serviceTax) {
+        AppHelper.getInstance().showProgressDialog("Please Wait", getActivity());
         List<NameValuePair> nameValuePairs = new ArrayList<>(
                 2);
         nameValuePairs.add(new BasicNameValuePair("billId",
@@ -153,7 +157,7 @@ public class OrderHistory extends BaseFragment {
                     @Override
                     public void onTaskCompletedSuccessfully(Object obj) {
                         // TODO Auto-generated method stub
-                        afterCheckBill(obj);
+                        afterCheckBill(obj, gst, serviceTax);
                         Log.e("Menyoo", obj.toString());
                     }
                 });
@@ -163,11 +167,11 @@ public class OrderHistory extends BaseFragment {
         httpMan.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, params);
     }
 
-    public void afterCheckBill(Object obj){
+    public void afterCheckBill(Object obj, double gst, double serviceTax) {
         try {
             JSONArray jsonArr = new JSONArray(obj.toString());
             ArrayList<CheckBillModel> billArr = new ArrayList<>();
-            for(int i=0;i<jsonArr.length();i++){
+            for (int i = 0; i < jsonArr.length(); i++) {
                 JSONObject jObj = jsonArr.getJSONObject(i);
                 boolean itemState = jObj.getBoolean("ItemState");
                 Integer orderId = jObj.getInt("OrderId");
@@ -179,37 +183,37 @@ public class OrderHistory extends BaseFragment {
                 double unitPrice = jObj.getDouble("UnitPrice");
                 String userName = jObj.getString("UserName");
                 String acceptedTime = jObj.getString("CreateTime");
-                ArrayList<CategoryExtra> variants= getExtraOptionData(jObj.getJSONArray("Extras"));
-                acceptedTime =  AppHelper.getDateTimeForAcceptedTime(acceptedTime);
+                ArrayList<CategoryExtra> variants = getExtraOptionData(jObj.getJSONArray("Extras"));
+                acceptedTime = AppHelper.getDateTimeForAcceptedTime(acceptedTime);
                 Integer orderRequestState = jObj.getInt("OrderRequestStateId");
-                billArr.add(new CheckBillModel(itemState,userName,orderId,itemId,itemQuantity,itemCode
-                        ,itemName,ItemComments,unitPrice,orderRequestState,acceptedTime,variants));
+                billArr.add(new CheckBillModel(itemState, userName, orderId, itemId, itemQuantity, itemCode
+                        , itemName, ItemComments, unitPrice, orderRequestState, acceptedTime, variants));
             }
-            showOrderDialog(billArr);
+            showOrderDialog(billArr, gst, serviceTax);
         } catch (JSONException e) {
             e.printStackTrace();
         }
     }
 
-    public ArrayList<CategoryExtra> getExtraOptionData(JSONArray extras){
+    public ArrayList<CategoryExtra> getExtraOptionData(JSONArray extras) {
         try {
             ArrayList<CategoryExtra> categoryExtras = new ArrayList<>();
-            for(int i=0;i<extras.length();i++){
+            for (int i = 0; i < extras.length(); i++) {
                 String optionName = extras.getJSONObject(i).getString("Option");
                 double price = extras.getJSONObject(i).getDouble("Price");
-                Options option = new Options(optionName,price);
+                Options option = new Options(optionName, price);
                 ArrayList<Options> optionses = new ArrayList<>();
                 optionses.add(option);
-                categoryExtras.add(new CategoryExtra("",optionses));
+                categoryExtras.add(new CategoryExtra("", optionses));
             }
             return categoryExtras;
         } catch (Exception e) {
             e.printStackTrace();
-            return  null;
+            return null;
         }
     }
 
-    public void showOrderDialog(ArrayList<CheckBillModel> data) {
+    public void showOrderDialog(ArrayList<CheckBillModel> data, double gstServer, double serviceTaxServer) {
 
         AppHelper.getInstance().hideProgressDialog();
         final Dialog dialog = new Dialog(getActivity());
@@ -217,6 +221,7 @@ public class OrderHistory extends BaseFragment {
         dialog.getWindow().setBackgroundDrawable(
                 new ColorDrawable(Color.TRANSPARENT));
         dialog.setContentView(R.layout.order_history_dialog);
+        double discount = 0.0;
 
         RecyclerView rvOrderHistory = (RecyclerView) dialog.findViewById(R.id.rv_order_history);
         TextView tvQuantity = (TextView) dialog.findViewById(R.id.tv_total_quantity);
@@ -224,24 +229,41 @@ public class OrderHistory extends BaseFragment {
         TextView SubTotal = (TextView) dialog.findViewById(R.id.tv_subtotal);
         TextView ServiceCharge = (TextView) dialog.findViewById(R.id.tv_service_charge);
         TextView Gst = (TextView) dialog.findViewById(R.id.tv_gst);
+        TextView mServiceHeader = (TextView) dialog.findViewById(R.id.tv_service_charge_header);
+        TextView mGstHeader = (TextView) dialog.findViewById(R.id.tv_gst_header);
+        TextView mHeader = (TextView) dialog.findViewById(R.id.header);
+        TextView mDiscount = (TextView) dialog.findViewById(R.id.tv_discount);
+        TextView mDiscountHeader = (TextView) dialog.findViewById(R.id.tv_discount_header);
+
         int tQuantity = 0;
-        double subTotal = 0, gst = 0, tCost = 0, serviceCharge = 0;
+        double subTotal = 0, gst = 0, tCost = 0, serviceCharge = 0, additionalPrice = 0;
 
 
         for (CheckBillModel i : data) {
-            subTotal += i.getUnitPrice() * i.getQuantity();
-            tQuantity += i.getQuantity();
+            if (i.getVaraints() != null) {
+                additionalPrice = 0.0;
+                for (CategoryExtra extra : i.getVaraints())
+                    additionalPrice += extra.getOptions().get(0).getPrice();
+                    /*additionalPrice +=price;*/
+                    /*orderItem.getMenu().setPrice(orderItem.getMenu().getPrice()+additionalPrice);*/
+            }
+            if (i.getUnitPrice() <= 0)
+                discount += -i.getUnitPrice();
+            else {
+                subTotal += (i.getUnitPrice() + additionalPrice) * i.getQuantity();
+                tQuantity += i.getQuantity();
+            }
         }
-        serviceCharge = subTotal*0.1;
-        gst = (subTotal+serviceCharge)*0.06;
-        tCost = subTotal+gst+serviceCharge;
+        serviceCharge = subTotal * serviceTaxServer;
+        gst = (subTotal + serviceCharge - discount) * gstServer;
+        tCost = subTotal + gst + serviceCharge - discount;
 
         tvQuantity.setText(String.format("T.Quantity: %d", tQuantity));
         tvCost.setText(String.format("T.Cost: RM %.2f", tCost));
         Gst.setText(String.format("RM %.2f", gst));
         ServiceCharge.setText(String.format("RM %.2f", serviceCharge));
         SubTotal.setText(String.format("RM %.2f", subTotal));
-
+        mGstHeader.setText(String.format("GST (%s%%)", gstServer * 100));
 
         CheckBillAdapter chkAdapter = new CheckBillAdapter(getActivity());
         rvOrderHistory.setLayoutManager(new LinearLayoutManager(getActivity(),
@@ -250,6 +272,28 @@ public class OrderHistory extends BaseFragment {
         rvOrderHistory.setAdapter(chkAdapter);
         dialog.show();
 
+        //checking discount and all
+        if (discount > 0) {
+            mDiscount.setText("RM " + discount);
+            mDiscount.setVisibility(View.VISIBLE);
+            mDiscountHeader.setVisibility(View.VISIBLE);
+        }
+
+        //bottom view set
+        if (gstServer <= 0 &&
+                serviceTaxServer <= 0) {
+            mHeader.setText("All Prices Are Net");
+            Gst.setVisibility(View.GONE);
+            mGstHeader.setVisibility(View.GONE);
+            mServiceHeader.setVisibility(View.GONE);
+            ServiceCharge.setVisibility(View.GONE);
+        } else if (gstServer <= 0) {
+            Gst.setVisibility(View.GONE);
+            mGstHeader.setVisibility(View.GONE);
+        } else if (serviceTaxServer <= 0) {
+            mServiceHeader.setVisibility(View.GONE);
+            ServiceCharge.setVisibility(View.GONE);
+        }
     }
 
 

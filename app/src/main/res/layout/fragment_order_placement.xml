@@ -135,7 +135,16 @@
                     android:layout_marginTop="10dp"
                     android:background="@color/white" />-->
             </LinearLayout>
-
+            <TextView
+                android:id="@+id/tv_viewMore_options"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:textColor="@drawable/btn_color"
+                android:layout_marginTop="10dp"
+                android:visibility="gone"
+                android:text="View More Options"
+                />
             <!--<View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"

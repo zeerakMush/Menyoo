@@ -6,10 +6,12 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.support.multidex.MultiDex;
 
+import com.crashlytics.android.Crashlytics;
 import com.dd.menyoo.model.GuestRequestModel;
 import com.dd.menyoo.model.RestaurantModel;
 import com.dd.menyoo.model.UserModel;
 
+import io.fabric.sdk.android.Fabric;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -38,6 +40,7 @@ public class AppController extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+        Fabric.with(this, new Crashlytics());
         mInstance = this;
         mContext = getApplicationContext();
         MultiDex.install(this);

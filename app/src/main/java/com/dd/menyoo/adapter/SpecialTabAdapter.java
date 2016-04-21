@@ -238,4 +238,5 @@ public class SpecialTabAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             mDataList.get(position).setExtraData(true);
         }
     }
+    String str = "Requirenment 1  asdhadhad \r\n\r\n Requirment 2";
 }

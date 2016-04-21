@@ -60,21 +60,32 @@
             android:orientation="vertical"
             >
             <TextView
+
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="SubTotal"
                 android:textColor="@color/secondary_text"
                 />
             <TextView
+                android:id="@+id/tv_service_charge_header"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Service Charge"
                 android:textColor="@color/secondary_text"
                 />
             <TextView
+                android:id="@+id/tv_gst_header"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="GST(6.0%)"
+                android:textColor="@color/secondary_text"
+                />
+            <TextView
+                android:id="@+id/tv_discount_header"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Discount"
+                android:visibility="gone"
                 android:textColor="@color/secondary_text"
                 />
 
@@ -112,7 +123,14 @@
                 android:text="GST(6.0%)"
                 android:textColor="@color/secondary_text"
                 />
-
+            <TextView
+                android:id="@+id/tv_discount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="GST(6.0%)"
+                android:visibility="gone"
+                android:textColor="@color/secondary_text"
+                />
         </LinearLayout>
         <View
             android:layout_width="match_parent"
@@ -181,23 +199,27 @@
             android:layout_above="@id/dvider2"
             android:padding="7dp">
 
-            <TextView
-                android:id="@+id/tv_total_quantity"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="30dp"
-                android:text="T.QTY: N/A"
-                android:textColor="@color/btn_color_default"
-                android:textSize="16sp"
-                android:textStyle="bold" />
+
 
             <TextView
                 android:id="@+id/tv_total_cost"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
-                android:layout_marginRight="30dp"
+                android:layout_marginRight="20dp"
                 android:text="T.Cost: N/A"
+                android:textColor="@color/btn_color_default"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+            <TextView
+                android:id="@+id/tv_total_quantity"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:text="T.QTY: N/A"
+                android:layout_toLeftOf="@id/tv_total_cost"
+                android:layout_alignParentLeft="true"
                 android:textColor="@color/btn_color_default"
                 android:textSize="16sp"
                 android:textStyle="bold" />

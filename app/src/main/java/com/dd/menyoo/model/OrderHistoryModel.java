@@ -9,11 +9,15 @@ public class OrderHistoryModel {
     String resName;
     int billId;
     String createdDate;
+    private double gst;
+    private double seviceTax;
 
-    public OrderHistoryModel(String resName, int billId, String createdDate) {
+    public OrderHistoryModel(String resName, int billId, String createdDate,double gst,double seviceTax) {
         this.resName = resName;
         this.billId = billId;
         this.createdDate = createdDate;
+        this.gst = gst;
+        this.seviceTax = seviceTax;
     }
 
     public String getResName() {
@@ -38,5 +42,13 @@ public class OrderHistoryModel {
 
     public void setCreatedDate(String createdDate) {
         this.createdDate = createdDate;
+    }
+
+    public double getGst() {
+        return gst;
+    }
+
+    public double getSeviceTax() {
+        return seviceTax;
     }
 }

@@ -38,6 +38,7 @@ import com.dd.menyoo.model.RestaurantModel;
 import com.dd.menyoo.network.NetworkManagerOld;
 import com.dd.menyoo.network.TaskCompleted;
 import com.facebook.login.LoginManager;
+import com.google.android.gms.iid.InstanceID;
 
 import org.apache.http.NameValuePair;
 import org.json.JSONArray;
@@ -179,6 +180,7 @@ public class MenuActivity extends BaseClass
 
     public void toTabActivity(RestaurantModel restaurantModel) {
         AppController.setCurrentRestaurent(restaurantModel);
+
         /*dataPro.UserGetWaiterGroup(""+restaurantModel.getRestaurantID());
         dataPro.UserGetBillGroup(""+restaurantModel.getRestaurantID());*/
 
@@ -226,7 +228,7 @@ public class MenuActivity extends BaseClass
     private void afterGetRestaurants(Object obj) {
         try {
             mRestaurantArr = new ArrayList<>();
-            mRestaurantArr.add(new RestaurantModel(0, "Solaris Dutamas, Kuala Lumpur", ""));
+            //mRestaurantArr.add(new RestaurantModel(0, "Solaris Dutamas, Kuala Lumpur", ""));
             JSONObject jsonObject = new JSONObject(obj.toString());
             JSONArray jsonArr = new JSONArray();
             if (jsonObject.has("Status")) {
@@ -247,12 +249,16 @@ public class MenuActivity extends BaseClass
                 boolean isComingSoon = jObj.getBoolean("IsCommingSoon");
                 boolean isReadOnly = jObj.getBoolean("IsReadOnly");
                 String feedBackEmail = jObj.getString("FeedBackEmail");
-                /*String loyalityDetails = jObj.getString("LoyalityDetails");
-                String loyalityRequirements = jObj.getString("LoyalityRequirements");*/
+                String loyalityDetails = jObj.getString("LoyalityDetails");
+                String loyalityRequirements = jObj.getString("LoyalityRequirements");
+                boolean isLoyaltyFeatureActive = jObj.getBoolean("IsLoyaltyFeatureActive");
+                double gst = jObj.getDouble("GST");
+                double serviceTax = jObj.getDouble("ServicTax");
 
                 if (!isComingSoon)
                     mRestaurantArr.add(new RestaurantModel(id, name, imageImage,
-                            isTableOccupied, isResActive, feedBackEmail,/*loyalityRequirements,loyalityDetails ,*/isReadOnly));
+                            isTableOccupied, isResActive, feedBackEmail, loyalityRequirements, loyalityDetails, isReadOnly,
+                            isLoyaltyFeatureActive, gst, serviceTax));
                 else {
                     String comingSoonMessage = jObj.getString("IsCommingSoonMessage");
                     mRestaurantArr.add
@@ -279,6 +285,18 @@ public class MenuActivity extends BaseClass
      **/
 
     public void signOut(View view) {
+        final InstanceID instanceID = InstanceID.getInstance(this);
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    instanceID.deleteInstanceID();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        thread.start();
         SharedPrefManager sharedPrefManager = new SharedPrefManager(this);
         sharedPrefManager.SetUserIsLoggedIn(null);
         LoginManager.getInstance().logOut();
@@ -304,7 +322,6 @@ public class MenuActivity extends BaseClass
     FrameLayout fl_fragment;
 
     public void replaceFragemtn(Fragment fragment, boolean isToAddBackStack) {
-
         mIBtnSearch.setVisibility(View.GONE);
         //mIBtnHome.setVisibility(View.VISIBLE);
         FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
@@ -402,5 +419,4 @@ public class MenuActivity extends BaseClass
         String[] params = {getString(R.string.url_offline) + url};
         httpMan.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, params);
     }
-
 }

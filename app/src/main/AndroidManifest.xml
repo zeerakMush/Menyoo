@@ -102,6 +102,9 @@
 
         <activity android:name=".VerifyAccount" />
         <activity android:name=".ForgetPassword"></activity>
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="f0437bbd14f288b8cb85f1cf2067f9152e03da31" />
     </application>
 
 </manifest>

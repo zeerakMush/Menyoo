@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/ll_stamps"
+    android:layout_width="match_parent"
+    android:layout_height="50dp"
+    android:orientation="horizontal"
+    android:weightSum="5">
+
+    <ImageView
+        android:id="@+id/iv_stamp1"
+        android:layout_width="60dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:padding="10dp"
+        android:scaleType="fitCenter"
+        android:src="@drawable/lock" />
+
+    <ImageView
+        android:id="@+id/iv_stamp2"
+        android:layout_width="60dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:padding="10dp"
+        android:scaleType="centerInside"
+        android:src="@drawable/lock" />
+
+    <ImageView
+        android:id="@+id/iv_stamp3"
+        android:layout_width="60dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:padding="10dp"
+        android:scaleType="centerInside"
+        android:src="@drawable/lock" />
+
+    <ImageView
+        android:id="@+id/iv_stamp4"
+        android:layout_width="60dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:padding="10dp"
+        android:scaleType="centerInside"
+        android:src="@drawable/lock" />
+
+    <ImageView
+        android:id="@+id/iv_stamp5"
+        android:layout_width="60dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:padding="10dp"
+        android:scaleType="centerInside"
+        android:src="@drawable/lock" />
+
+</LinearLayout>

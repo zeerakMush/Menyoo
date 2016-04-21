@@ -79,13 +79,21 @@ public class OrderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         String orderName = String.format("x%d %s", orderItem.getQuantity(), orderItem.getMenu().getTitle());
         holder.tvTitle.setText(orderName);
         double additionalPrice = 0.0;
-        if(orderItem.getExtraId()!=null)
-        {
-            for(Double price: orderItem.getExtraPrice())
-                additionalPrice +=price;
+        String variantNameCvs = "";
+
+        if (orderItem.getExtraId() != null) {
+            for (Double price : orderItem.getExtraPrice())
+                additionalPrice += price;
+            for(String name:orderItem.getExtraName()){
+                if (!variantNameCvs.equals(""))
+                    variantNameCvs = variantNameCvs + ", " + name;
+                else
+                    variantNameCvs = name;
+            }
+
                     /*orderItem.getMenu().setPrice(orderItem.getMenu().getPrice()+additionalPrice);*/
         }
-        holder.tvPrice.setText(String.format("RM %.2f", (orderItem.getMenu().getPrice()+additionalPrice) * orderItem.getQuantity()));
+        holder.tvPrice.setText(String.format("RM %.2f", (orderItem.getMenu().getPrice() + additionalPrice) * orderItem.getQuantity()));
         holder.btnDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -138,6 +146,11 @@ public class OrderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         } else
             holder.tvComment.setVisibility(View.GONE);
 
+        if (!variantNameCvs.trim().isEmpty()) {
+            holder.tvVariantName.setVisibility(View.VISIBLE);
+            holder.tvVariantName.setText(variantNameCvs);
+        } else
+            holder.tvVariantName.setVisibility(View.GONE);
     }
 
     public void remove(int position) {
@@ -155,7 +168,7 @@ public class OrderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     private class ItemViewHolder extends RecyclerView.ViewHolder {
 
 
-        private TextView tvTitle, tvPrice, tvComment, tvQuantity;
+        private TextView tvTitle, tvPrice, tvComment, tvQuantity,tvVariantName;
         private Button btnDelete, addBtn, subBtn;
         private LinearLayout llChangeQuantity;
 
@@ -170,6 +183,7 @@ public class OrderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             addBtn = (Button) itemView.findViewById(R.id.btn_add);
             subBtn = (Button) itemView.findViewById(R.id.btn_sub);
             llChangeQuantity = (LinearLayout) itemView.findViewById(R.id.ll_changeQuantity);
+            tvVariantName = (TextView) itemView.findViewById(R.id.tv_variant_name);
         }
     }
 

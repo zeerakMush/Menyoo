@@ -64,7 +64,7 @@ public class OrderHistoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         final OrderHistoryModel ohm = mDataList.get(position);
         holder.tvResName.setText(ohm.getResName());
         holder.tvOrderDate.setText(ohm.getCreatedDate());
-        holder.rlOrder.setTag(ohm.getBillId());
+        holder.rlOrder.setTag(ohm);
         if(_listener!=null)
             holder.rlOrder.setOnClickListener(_listener);
     }

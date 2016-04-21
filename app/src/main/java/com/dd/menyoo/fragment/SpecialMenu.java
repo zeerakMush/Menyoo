@@ -29,7 +29,9 @@ import com.dd.menyoo.adapter.SpecialTabAdapter;
 import com.dd.menyoo.common.AppController;
 import com.dd.menyoo.common.AppHelper;
 import com.dd.menyoo.common.RoundedTransformation;
+import com.dd.menyoo.model.CategoryExtra;
 import com.dd.menyoo.model.MenuModel;
+import com.dd.menyoo.model.Options;
 import com.dd.menyoo.model.RestaurantModel;
 import com.dd.menyoo.network.NetworkManagerOld;
 import com.dd.menyoo.network.TaskCompleted;
@@ -143,9 +145,10 @@ public class SpecialMenu extends BaseFragment {
                 else
                     discount="";
                 String imageNAme = jObj.getString("SpecialDisplayPictureFile");
+                ArrayList<CategoryExtra> variants= getExtraOptionData(jObj.getJSONArray("Extras"));
                 if((!AppController.isFirstTimeOrderAdded()&&isFirstTime)||isSpecial||isPopular)
                 mSpecailMenuArray.add(new MenuModel(name,description,
-                        imageNAme,prize,id,isSpecial,discount,isPopular,isFirstTime,isExtraData));
+                        imageNAme,prize,id,isSpecial,discount,isPopular,isFirstTime,isExtraData,variants));
             }
             pbWait.setVisibility(View.GONE);
             Collections.reverse(mSpecailMenuArray);
@@ -166,6 +169,32 @@ public class SpecialMenu extends BaseFragment {
             e.printStackTrace();
         }
     }
+
+    public ArrayList<CategoryExtra> getExtraOptionData(JSONArray extras){
+        try {
+            ArrayList<CategoryExtra> categoryExtras = new ArrayList<>();
+            for(int i=0;i<extras.length();i++){
+                String optionName = "";
+                ArrayList<Options> options ;
+                JSONObject jExtra = extras.getJSONObject(i);
+                optionName = jExtra.getString("OptionName");
+                options = new ArrayList<>();
+                JSONArray jOptionName = jExtra.getJSONArray("Options");
+                for(int j=0;j<jOptionName.length();j++){
+                    String name = jOptionName.getJSONObject(j).getString("option");
+                    double price =jOptionName.getJSONObject(j).getDouble("price");
+                    int id = jOptionName.getJSONObject(j).getInt("optionId");
+                    options.add(new Options(name,price,id));
+                }
+                categoryExtras.add(new CategoryExtra(optionName,options));
+            }
+            return categoryExtras;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return  null;
+        }
+    }
+
 
     public void zoomImageFromThumb(final View thumbView, String imageName) {
         // If there's an animation in progress, cancel it

@@ -44,7 +44,7 @@ public class OrderPlacement extends BaseFragment implements View.OnClickListener
     }
 
     MenuModel mMenuModel;
-    TextView mTitle, mPrice, mDescription, mQuantity, mTotalPrice, mViewMore;
+    TextView mTitle, mPrice, mDescription, mQuantity, mTotalPrice, mViewMore,mViewMoreOptions;
     Button mAddBTn, mSubBtn, mAddToBasket;
     LinearLayout llExtraData;
     Spinner spinnerTop, spinnerBottom;
@@ -53,6 +53,7 @@ public class OrderPlacement extends BaseFragment implements View.OnClickListener
     double totalPrize, prize;
     ArrayList<Integer> mVaraitsID;
     ArrayList<Double> mExtraPrice;
+    ArrayList<String> mExtraName;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -73,6 +74,7 @@ public class OrderPlacement extends BaseFragment implements View.OnClickListener
         mAddBTn = (Button) view.findViewById(R.id.btn_add);
         mSubBtn = (Button) view.findViewById(R.id.btn_sub);
         llExtraData = (LinearLayout) view.findViewById(R.id.ll_extra_data);
+        mViewMoreOptions = (TextView) view.findViewById(R.id.tv_viewMore_options);mViewMoreOptions.setOnClickListener(this);
         /*spinnerTop = (Spinner)view.findViewById(R.id.spinner_top);
         spinnerBottom = (Spinner)view.findViewById(R.id.spinner_bottom);*/
 
@@ -89,6 +91,7 @@ public class OrderPlacement extends BaseFragment implements View.OnClickListener
                 }
             }
         });
+
         setListeners();
         setFeilds();
     }
@@ -111,15 +114,20 @@ public class OrderPlacement extends BaseFragment implements View.OnClickListener
         }
     }
 
+    private int displayedSpinner;
+
     public void setSpinners(ArrayList<CategoryExtra> extras) {
-        int i = 0;
+        displayedSpinner = 0;
         mVaraitsID = new ArrayList<>();
         mExtraPrice = new ArrayList<>();
+        mExtraName = new ArrayList<>();
+
         for (CategoryExtra cExtra : extras) {
-            addSpinner(cExtra, i++);
-            mVaraitsID.add(0);
-            mExtraPrice.add(0.0);
+            if(displayedSpinner<2){
+                addSpinnersData(cExtra,displayedSpinner);
+            }
         }
+        setViewMoreAddons();
     }
 
     public void setmMenuModel(MenuModel mMenuModel) {
@@ -132,12 +140,26 @@ public class OrderPlacement extends BaseFragment implements View.OnClickListener
         mAddBTn.setOnClickListener(this);
         mViewMore.setOnClickListener(this);
     }
+    public void setViewMoreAddons(){
+        if(mMenuModel.getVariants().size() - displayedSpinner !=0){
+            mViewMoreOptions.setVisibility(View.VISIBLE);
+        }else{
+            mViewMoreOptions.setVisibility(View.GONE);
+        }
+    }
+    public void addSpinnersData(CategoryExtra extra ,int position){
+        addSpinner(extra, position);
+        mVaraitsID.add(0);
+        mExtraPrice.add(0.0);
+        mExtraName.add("");
+        displayedSpinner+=1;
+    }
 
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.btn_add:
-                addItem();
+                addItem(true);
                 break;
             case R.id.btn_sub:
                 subItem();
@@ -152,6 +174,10 @@ public class OrderPlacement extends BaseFragment implements View.OnClickListener
                 mDescription.setMaxLines(Integer.MAX_VALUE);
                 mViewMore.setVisibility(View.GONE);
                 break;
+            case R.id.tv_viewMore_options:
+                addSpinnersData(mMenuModel.getVariants().get(displayedSpinner),displayedSpinner);
+                setViewMoreAddons();
+                break;
 
         }
     }
@@ -160,20 +186,21 @@ public class OrderPlacement extends BaseFragment implements View.OnClickListener
         OrderModel orderModel;
         if (mVaraitsID != null && mVaraitsID.size() > 0)
             orderModel = new OrderModel(mMenuModel,
-                    mComment.getText().toString(), quantity, mVaraitsID,mExtraPrice);
+                    mComment.getText().toString(), quantity, mVaraitsID,mExtraPrice,mExtraName);
         else
             orderModel = new OrderModel(mMenuModel,
                     mComment.getText().toString(), quantity);
         return orderModel;
     }
 
-    private void addItem() {
+    private void addItem(boolean isToShowToast) {
         if (!mMenuModel.isfirstTimeItem()) {
             quantity += 1;
             totalPrize = prize * quantity;
             mQuantity.setText(String.format("Quantity %d", quantity));
             mTotalPrice.setText(String.format("RM %.2f", totalPrize));
         } else {
+            if(isToShowToast)
             Toast.makeText(getActivity(), "Only Single item is allowed", Toast.LENGTH_LONG).show();
         }
     }
@@ -226,7 +253,8 @@ public class OrderPlacement extends BaseFragment implements View.OnClickListener
         for (Options options : extra.getOptions()) {
             optionsArr[i++] = options.getName();
         }
-        ArrayAdapter<String> gameKindArray = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, optionsArr);
+        ArrayAdapter<String> gameKindArray = new ArrayAdapter<>
+                (getActivity(), android.R.layout.simple_spinner_item, optionsArr);
         gameKindArray.setDropDownViewResource(android.R.layout.simple_list_item_single_choice);
         spinner.setAdapter(gameKindArray);
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -236,6 +264,8 @@ public class OrderPlacement extends BaseFragment implements View.OnClickListener
                     mVaraitsID.set((Integer) spinner.getTag(), extra.getOptions().get(i).getID());
                 if (mExtraPrice.size() > 0)
                     mExtraPrice.set((Integer) spinner.getTag(), extra.getOptions().get(i).getPrice());
+                if (mExtraName.size() > 0)
+                    mExtraName.set((Integer) spinner.getTag(), extra.getOptions().get(i).getName());
                 updatePrce();
                 /*prize = mMenuModel.getPrice();
                 prize += extra.getOptions().get(i).getPrice();*/
@@ -264,7 +294,7 @@ public class OrderPlacement extends BaseFragment implements View.OnClickListener
         for (Double price : mExtraPrice) {
             this.prize += price;
         }
-        addItem();
+        addItem(false);
         subItem();
     }
 

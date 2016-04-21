@@ -145,9 +145,9 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             } else {
                 final String filterPattern = constraint.toString().toLowerCase().trim();
                 for(int i=0;i<bufferArr.size();i++){
-                    if(i==0)
+                    /*if(i==0)
                         filteredList.add(bufferArr.get(0));
-                    else if (bufferArr.get(i).getRestaurantName().toLowerCase().contains(constraint)) {
+                    else */if (bufferArr.get(i).getRestaurantName().toLowerCase().contains(constraint)) {
                         filteredList.add(bufferArr.get(i));
                     }
                 }

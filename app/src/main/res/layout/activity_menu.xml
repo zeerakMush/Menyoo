@@ -22,14 +22,18 @@
             android:layout_width="match_parent"
             android:layout_marginTop="40dp"
             android:orientation="vertical"
-            android:layout_height="wrap_content">
+            android:weightSum="4"
+            android:layout_height="200dp">
             <LinearLayout
                 android:background="@color/bottom_menu_color"
                 android:id="@+id/llHome"
                 android:onClick="toHome"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:padding="10dp"
+                android:layout_height="0dp"
+                android:gravity="center"
+                android:layout_weight="1"
+                android:paddingRight="10dp"
+                android:paddingLeft="10dp"
                 android:orientation="horizontal"
                 >
                 <ImageView
@@ -54,8 +58,11 @@
                 android:id="@+id/llProfile"
                 android:onClick="toProfile"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:padding="10dp"
+                android:layout_height="0dp"
+                android:gravity="center"
+                android:layout_weight="1"
+                android:paddingRight="10dp"
+                android:paddingLeft="10dp"
                 android:orientation="horizontal"
                 >
                 <ImageView
@@ -78,8 +85,11 @@
             <LinearLayout
                 android:id="@+id/llAboutUs"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:padding="10dp"
+                android:layout_height="0dp"
+                android:gravity="center"
+                android:layout_weight="1"
+                android:paddingRight="10dp"
+                android:paddingLeft="10dp"
                 android:onClick="toAboutUs"
                 android:orientation="horizontal"
                 >
@@ -103,8 +113,11 @@
             <LinearLayout
                 android:id="@+id/llOrderHistory"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:padding="10dp"
+                android:layout_height="0dp"
+                android:gravity="center"
+                android:layout_weight="1"
+                android:paddingRight="10dp"
+                android:paddingLeft="10dp"
                 android:onClick="toOrderHistory"
                 android:orientation="horizontal"
                 >
@@ -127,9 +140,9 @@
             </LinearLayout>
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:padding="10dp"
+                android:layout_height="0dp"
                 android:onClick="signOut"
+                android:layout_weight="1"
                 android:orientation="horizontal"
                 >
                 <ImageView

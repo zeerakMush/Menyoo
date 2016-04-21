@@ -5,6 +5,7 @@
     android:orientation="vertical"
     android:layout_height="wrap_content">
     <RelativeLayout
+        android:id="@+id/rl_main"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
         <Button
@@ -53,7 +54,14 @@
                 android:layout_marginRight="10dp"
                 android:layout_toLeftOf="@id/tv_order_prize"
                 android:orientation="vertical">
-
+                <TextView
+                    android:id="@+id/tv_variant_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Comment"
+                    android:textColor="@color/sub_text_color"
+                    android:textSize="12.7sp"
+                    android:visibility="gone" />
                 <TextView
                     android:id="@+id/tv_order_comment"
                     android:layout_width="wrap_content"
@@ -121,6 +129,7 @@
             />
     </LinearLayout>
     <View
+        android:id="@+id/saperator"
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_below="@id/rl_upper"

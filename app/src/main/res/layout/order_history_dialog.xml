@@ -94,24 +94,34 @@
                 android:orientation="vertical"
                 >
                 <TextView
+
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="SubTotal"
                     android:textColor="@color/secondary_text"
                     />
                 <TextView
+                    android:id="@+id/tv_service_charge_header"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Service Charge"
                     android:textColor="@color/secondary_text"
                     />
                 <TextView
+                    android:id="@+id/tv_gst_header"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="GST(6.0%)"
                     android:textColor="@color/secondary_text"
                     />
-
+                <TextView
+                    android:id="@+id/tv_discount_header"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Discount"
+                    android:visibility="gone"
+                    android:textColor="@color/secondary_text"
+                    />
             </LinearLayout>
             <LinearLayout
                 android:id="@+id/ll_extra_chages"
@@ -146,7 +156,14 @@
                     android:text="GST(6.0%)"
                     android:textColor="@color/secondary_text"
                     />
-
+                <TextView
+                    android:id="@+id/tv_discount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="GST(6.0%)"
+                    android:visibility="gone"
+                    android:textColor="@color/secondary_text"
+                    />
             </LinearLayout>
             <View
                 android:layout_width="match_parent"
